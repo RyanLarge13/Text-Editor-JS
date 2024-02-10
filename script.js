@@ -33,12 +33,10 @@ class Buffer {
   }
 
   expandBuffer() {
-    console.log("expanding");
-    const newSize = this.buffer.length * 2;
-    for (var i = this.buffer.length; i <= newSize; i++) {
-      this.buffer[i] = " ";
-    }
-    this.gapEnd = newSize;
+    const addSize = 10;
+    const newBuffer = new Array(addSize).fill(" ");
+    this.buffer.splice(this.gapEnd, 0, ...newBuffer);
+    this.gapEnd += addSize;
   }
 
   insert(c, index) {
@@ -141,7 +139,8 @@ page.addEventListener("keydown", (e) => {
       gapBuffer.movePosForward(1);
       break;
     case "Tab":
-      gapBuffer.movePosForward(2);
+      gapBuffer.insert(" ", gapBuffer.getCurrentPos());
+      gapBuffer.insert(" ", gapBuffer.getCurrentPos());
       break;
     case "Shift":
       break;
