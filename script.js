@@ -76,8 +76,16 @@ class Buffer {
     return this.buffer;
   }
 
+  printSelection(start, end) {
+    console.log(this.buffer.slice(start, end));
+  }
+
   getCurrentPos() {
     return this.indexState;
+  }
+
+  getGapEnd() {
+    return this.gapEnd;
   }
 
   movePosBack(amount) {
@@ -152,5 +160,24 @@ page.addEventListener("keydown", (e) => {
       break;
   }
   editor.print(gapBuffer);
-  console.log(gapBuffer.printRaw());
+  // console.log(gapBuffer.printRaw());
+});
+
+page.addEventListener("mouseup", (e) => {
+  const selection = window.getSelection();
+  const selectedText = selection.toString();
+  if (selectedText !== "") {
+    const range = selection.getRangeAt(0);
+    const start = range.startOffset;
+    const end = range.endOffset;
+    const completeStartIndex =
+      start < gapBuffer.getCurrentPos()
+        ? start
+        : start + (gapBuffer.getGapEnd() - gapBuffer.getCurrentPos());
+    const completeEndIndex =
+      end < gapBuffer.getCurrentPos()
+        ? end
+        : end + (gapBuffer.getGapEnd() - gapBuffer.getCurrentPos());
+    gapBuffer.printSelection(completeStartIndex, completeEndIndex);
+  }
 });
