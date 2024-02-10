@@ -33,8 +33,9 @@ class Buffer {
   }
 
   expandBuffer() {
+    console.log("expanding");
     const newSize = this.buffer.length * 2;
-    for (var i = this.buffer.length - 1; i >= newSize; i--) {
+    for (var i = this.buffer.length; i <= newSize; i++) {
       this.buffer[i] = " ";
     }
     this.gapEnd = newSize;
@@ -44,10 +45,10 @@ class Buffer {
     if (index < 0 || index > this.buffer.length) {
       return;
     }
-    if (this.gapStart != this.gapEnd) {
+    if (this.gapStart !== this.gapEnd) {
       this.moveGap(index);
     }
-    if (this.gapStart == this.gapEnd) {
+    if (this.gapStart === this.gapEnd) {
       this.expandBuffer();
     }
     this.buffer[this.gapStart] = c;
@@ -72,6 +73,10 @@ class Buffer {
     return beforeGap.concat(afterGap).join("");
   }
 
+  printRaw() {
+    return this.buffer;
+  }
+
   getCurrentPos() {
     return this.indexState;
   }
@@ -85,13 +90,15 @@ class Buffer {
   }
 
   movePosForward(amount) {
+    if (
+      this.indexState + amount >
+      this.buffer.length - (this.gapEnd - this.gapStart)
+    ) {
+      this.expandBuffer();
+    }
     this.indexState += amount;
-    if (this.indexState > this.buffer.length - (this.gapEnd - this.gapStart)) {
-      this.indexState = this.buffer.length - (this.gapEnd - this.gapStart);
-      if (this.indexState < 0) {
-        this.indexState = 0;
-      }
-      return;
+    for (let i = 0; i < amount; i++) {
+      this.insert(" ", this.indexState);
     }
   }
 
@@ -136,4 +143,5 @@ page.addEventListener("keydown", (e) => {
       break;
   }
   editor.print(gapBuffer);
+  console.log(gapBuffer.printRaw());
 });
