@@ -94,7 +94,20 @@ class Buffer {
     if (this.gapStart != this.gapEnd) {
       this.moveGap(index);
     }
-    this.currentLineCount -= 1;
+    const c = this.buffer[this.gapStart - 1];
+    if (c === "\n") {
+      this.newLines -= 1;
+      let currentLineLength = 0;
+      for (let i = this.indexState; i > 0; i--) {
+        currentLineLength++;
+        if (this.buffer[i] === "\n") {
+          break;
+        }
+      }
+      this.currentLineCount = currentLineLength;
+    } else {
+      this.currentLineCount -= 1;
+    }
     this.changeCursorPosition();
     this.buffer[this.gapStart - 1] = " ";
     this.gapStart--;
@@ -158,7 +171,7 @@ class Buffer {
   }
 
   changeCursorPosition() {
-    this.cursor.style.top = `${15 + 14 * this.newLines}px`;
+    this.cursor.style.top = `${15 + 21 * this.newLines}px`;
     this.cursor.style.left = `${15 + 7 * this.currentLineCount}px`;
   }
 }
