@@ -1,4 +1,19 @@
 const page = document.getElementById("text-editor");
+const toolbar = document.getElementById("tool-bar");
+
+const initialize = () => {
+  resize();
+};
+
+const resize = () => {
+  const toolbarHight = toolbar.getBoundingClientRect().height;
+  const defaultPadding = 15;
+  page.style.height = `${
+    window.innerHeight - toolbarHight - defaultPadding * 2
+  }px`;
+  page.style.width = `${(window.innerWidth - defaultPadding * 2) / 2}px`;
+  page.style.padding = `${defaultPadding}px`;
+};
 
 class Buffer {
   constructor() {
@@ -181,3 +196,6 @@ page.addEventListener("mouseup", (e) => {
     gapBuffer.printSelection(completeStartIndex, completeEndIndex);
   }
 });
+
+window.addEventListener("resize", resize);
+window.addEventListener("DOMContentLoaded", initialize);
