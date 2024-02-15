@@ -8,6 +8,7 @@
 body {
   font-family: "Poppins", "sans-serif";
   background-color: #eeefff;
+  font-size: 14px;
 }
 
 .doc-and-title {
@@ -55,9 +56,34 @@ body {
   background-color: #fff;
   color: #000;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  position: relative;
 }
 
 #text-editor:focus {
   border: none;
   outline: none;
+}
+
+.cursor {
+  position: absolute;
+  pointer-events: none;
+  animation-name: cursor;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes cursor {
+  0% {
+    opacity: 1;
+  }
+  49% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }

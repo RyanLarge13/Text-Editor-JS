@@ -1,26 +1,37 @@
 const page = document.getElementById("text-editor");
+const pageText = document.getElementById("text");
 const toolbar = document.getElementById("tool-bar");
+const editorCursor = document.getElementById("cursor");
+const defaultPadding = 15;
 
 const initialize = () => {
   resize();
 };
 
+const setCursorBlink = () => {
+  editorCursor.style.top = `${0 + defaultPadding}px`;
+  editorCursor.style.left = `${0 + defaultPadding}px`;
+};
+
 const resize = () => {
   const toolbarHight = toolbar.getBoundingClientRect().height;
-  const defaultPadding = 15;
   page.style.height = `${
     window.innerHeight - toolbarHight - defaultPadding * 2
   }px`;
   page.style.width = `${(window.innerWidth - defaultPadding * 2) / 2}px`;
   page.style.padding = `${defaultPadding}px`;
+  setCursorBlink(defaultPadding);
 };
 
 class Buffer {
-  constructor() {
+  constructor(cursor) {
     this.buffer = new Array(10).fill(" ");
     this.gapStart = 0;
     this.indexState = 0;
     this.gapEnd = 10;
+    this.newLines = 0;
+    this.currentLineCount = 0;
+    this.cursor = cursor;
   }
 
   moveGap(index) {
@@ -64,6 +75,13 @@ class Buffer {
     if (this.gapStart === this.gapEnd) {
       this.expandBuffer();
     }
+    if (c === "\n") {
+      this.currentLineCount = 0;
+      this.newLines += 1;
+    } else {
+      this.currentLineCount += 1;
+    }
+    this.changeCursorPosition();
     this.buffer[this.gapStart] = c;
     this.gapStart++;
     this.indexState++;
@@ -76,6 +94,8 @@ class Buffer {
     if (this.gapStart != this.gapEnd) {
       this.moveGap(index);
     }
+    this.currentLineCount -= 1;
+    this.changeCursorPosition();
     this.buffer[this.gapStart - 1] = " ";
     this.gapStart--;
     this.indexState--;
@@ -136,18 +156,23 @@ class Buffer {
   getSize() {
     return this.buffer.length;
   }
+
+  changeCursorPosition() {
+    this.cursor.style.top = `${15 + 14 * this.newLines}px`;
+    this.cursor.style.left = `${15 + 7 * this.currentLineCount}px`;
+  }
 }
 
 class Editor {
   constructor() {}
   print(gapBuffer) {
     const text = gapBuffer.print();
-    page.innerText = text;
+    pageText.innerText = text;
   }
 }
 
 const editor = new Editor();
-const gapBuffer = new Buffer();
+const gapBuffer = new Buffer(editorCursor);
 page.addEventListener("keydown", (e) => {
   e.preventDefault();
   const key = e.key;
