@@ -65,12 +65,17 @@ body {
 }
 
 .cursor {
-  position: absolute;
+  display: inline;
   pointer-events: none;
   animation-name: cursor;
-  animation-duration: 1000ms;
+  color: #777;
+  animation-duration: 900ms;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
+}
+
+.hidden {
+  display: none;
 }
 
 @keyframes cursor {
