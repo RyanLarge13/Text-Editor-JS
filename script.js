@@ -139,6 +139,7 @@ class Buffer {
     this.indexState -= amount;
     this.gapStart -= amount;
     this.gapEnd -= amount;
+    cursor.style.transform = "translateX(-14px)";
   }
 
   movePosForward(amount) {
@@ -166,8 +167,8 @@ class Editor {
   constructor() {}
   print(gapBuffer) {
     const text = gapBuffer.print();
-    const lineBreaks = text.replace("\n", "<br />");
-    pageText.innerHTML = `${lineBreaks}<div class="cursor">|</div>`;
+    pageText.innerText = text;
+    pageText.appendChild(cursor);
   }
 }
 
@@ -200,7 +201,7 @@ page.addEventListener("keydown", (e) => {
       break;
   }
   editor.print(gapBuffer);
-  // console.log(gapBuffer.printRaw());
+  console.log(gapBuffer.printRaw());
 });
 
 page.addEventListener("focusout", (e) => {
