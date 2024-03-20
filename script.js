@@ -106,9 +106,11 @@ class Buffer {
   }
 
   print() {
-    const beforeGap = this.buffer.slice(0, this.gapStart);
-    const afterGap = this.buffer.slice(this.gapEnd);
-    return beforeGap.concat(afterGap).join("");
+    const beforeGap =
+      this.buffer.slice(0, this.gapStart).join("") +
+      `<span class="cursor">|</span>`;
+    const afterGap = this.buffer.slice(this.gapEnd).join("");
+    return beforeGap.concat(afterGap);
   }
 
   printRaw() {
@@ -167,8 +169,7 @@ class Editor {
   constructor() {}
   print(gapBuffer) {
     const text = gapBuffer.print();
-    pageText.innerText = text;
-    pageText.appendChild(cursor);
+    pageText.innerHTML = text;
   }
 }
 
