@@ -130,7 +130,7 @@ class Buffer {
   }
 
   movePosBack(amount) {
-    if (this.indexState - 1 <= 0) {
+    if (this.indexState - 1 < 0) {
       this.indexState = 0;
       return;
     }
@@ -214,6 +214,8 @@ page.addEventListener("focusin", (e) => {
 });
 
 page.addEventListener("mouseup", (e) => {
+  // checkForSelection()
+  console.log(e);
   const selection = window.getSelection();
   const selectedText = selection.toString();
   if (selectedText !== "") {
@@ -231,6 +233,8 @@ page.addEventListener("mouseup", (e) => {
     gapBuffer.printSelection(completeStartIndex, completeEndIndex);
   }
 });
+
+const checkForSelection = () => {};
 
 window.addEventListener("resize", resize);
 window.addEventListener("DOMContentLoaded", initialize);

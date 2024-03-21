@@ -69,8 +69,6 @@ body {
   display: inline;
   padding: -2px;
   margin: -2px;
-  letter-spacing: 0;
-  word-spacing: 0;
   pointer-events: none;
   animation-name: cursor;
   color: #777;
