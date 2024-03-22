@@ -1,8 +1,8 @@
 const page = document.getElementById("text-editor");
-const pageText = document.getElementById("text");
 const toolbar = document.getElementById("tool-bar");
 const cursor = document.querySelector(".cursor");
 const defaultPadding = 15;
+let pageText = document.getElementById("main-text");
 
 const initialize = () => {
   resize();
@@ -171,6 +171,9 @@ class Editor {
     const text = gapBuffer.print();
     pageText.innerHTML = text;
   }
+  createNewText() {
+    // const newText =
+  }
 }
 
 const editor = new Editor();
@@ -196,6 +199,7 @@ page.addEventListener("keydown", (e) => {
       break;
     case "Enter":
       gapBuffer.insert("\n", gapBuffer.getCurrentPos());
+      createNewText();
       break;
     default:
       gapBuffer.insert(e.key, gapBuffer.getCurrentPos());
