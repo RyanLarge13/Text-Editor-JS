@@ -8,10 +8,11 @@ const initialize = () => {
 
 const resize = () => {
   const toolbarHight = toolbar.getBoundingClientRect().height;
-  page.style.height = `${
-    window.innerHeight - toolbarHight - defaultPadding * 2
-  }px`;
-  page.style.width = `${(window.innerWidth - defaultPadding * 2) / 2}px`;
+  const docHeight = window.innerHeight - toolbarHight - defaultPadding * 2;
+  const checkWidth = window.innerWidth - defaultPadding * 2;
+  const docWidth = checkWidth < 400 ? 400 : checkWidth / 2;
+  page.style.height = `${docHeight}px`;
+  page.style.width = `${docWidth}px`;
   page.style.padding = `${defaultPadding}px`;
 };
 
@@ -230,6 +231,10 @@ page.addEventListener("focusout", (e) => {
 page.addEventListener("focusin", (e) => {
   const cursor = document.querySelector(".cursor");
   cursor.classList.remove("hidden");
+});
+
+page.addEventListener("click", (e) => {
+  page.focus();
 });
 
 page.addEventListener("mouseup", (e) => {
