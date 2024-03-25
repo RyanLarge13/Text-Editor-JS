@@ -1,8 +1,6 @@
 const page = document.getElementById("text-editor");
 const toolbar = document.getElementById("tool-bar");
-const cursor = document.querySelector(".cursor");
 const defaultPadding = 15;
-let pageText = document.getElementById("main-text");
 
 const initialize = () => {
   resize();
@@ -141,7 +139,6 @@ class Buffer {
     this.indexState -= amount;
     this.gapStart -= amount;
     this.gapEnd -= amount;
-    cursor.style.transform = "translateX(-14px)";
   }
 
   movePosForward(amount) {
@@ -167,17 +164,34 @@ class Buffer {
 
 class Editor {
   constructor() {}
-  print(gapBuffer) {
-    const text = gapBuffer.print();
-    pageText.innerHTML = text;
+  print(element) {
+    const text = element.buffer.print();
+    element.DOMNode.innerHTML = text;
   }
-  createNewText() {
-    // const newText =
+  createNewText(currentElement, gapBuffer) {
+    const newTextBuffer = {
+      type: "p",
+      DOMNode: page.appendChild(document.createElement("p")),
+      buffer: new Buffer(),
+      styles: [],
+    };
+    elements.push(newTextBuffer);
+    gapBuffer = newTextBuffer.buffer;
+    currentElement = newTextBuffer.DOMNode;
   }
 }
 
 const editor = new Editor();
-const gapBuffer = new Buffer();
+const elements = [
+  {
+    type: "p",
+    DOMNode: page.appendChild(document.createElement("p")),
+    buffer: new Buffer(),
+    styles: [],
+  },
+];
+let currentElement = elements[0];
+let gapBuffer = currentElement.buffer;
 page.addEventListener("keydown", (e) => {
   e.preventDefault();
   const key = e.key;
@@ -198,22 +212,23 @@ page.addEventListener("keydown", (e) => {
     case "Shift":
       break;
     case "Enter":
-      gapBuffer.insert("\n", gapBuffer.getCurrentPos());
-      createNewText();
+      editor.createNewText(currentElement, gapBuffer);
       break;
     default:
       gapBuffer.insert(e.key, gapBuffer.getCurrentPos());
       break;
   }
-  editor.print(gapBuffer);
+  editor.print(currentElement);
   console.log(gapBuffer.printRaw());
 });
 
 page.addEventListener("focusout", (e) => {
+  const cursor = document.querySelector(".cursor");
   cursor.classList.add("hidden");
 });
 
 page.addEventListener("focusin", (e) => {
+  const cursor = document.querySelector(".cursor");
   cursor.classList.remove("hidden");
 });
 
