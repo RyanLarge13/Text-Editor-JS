@@ -1,21 +1,3 @@
-const page = document.getElementById("text-editor");
-const toolbar = document.getElementById("tool-bar");
-const defaultPadding = 15;
-
-const initialize = () => {
-  resize();
-};
-
-const resize = () => {
-  const toolbarHight = toolbar.getBoundingClientRect().height;
-  const docHeight = window.innerHeight - toolbarHight - defaultPadding * 2;
-  const checkWidth = window.innerWidth - defaultPadding * 2;
-  const docWidth = checkWidth < 400 ? 400 : checkWidth / 2;
-  page.style.height = `${docHeight}px`;
-  page.style.width = `${docWidth}px`;
-  page.style.padding = `${defaultPadding}px`;
-};
-
 class Buffer {
   constructor() {
     this.buffer = new Array(10).fill(" ");
@@ -80,7 +62,7 @@ class Buffer {
 
   erase(index) {
     if (index <= 0 || index > this.gapEnd) {
-      return;
+      return 0;
     }
     if (this.gapStart != this.gapEnd) {
       this.moveGap(index);
@@ -102,12 +84,14 @@ class Buffer {
     this.buffer[this.gapStart - 1] = " ";
     this.gapStart--;
     this.indexState--;
+    return 1;
   }
 
-  print() {
-    const beforeGap =
-      this.buffer.slice(0, this.gapStart).join("") +
-      `<span class="cursor">|</span>`;
+  print(withCursor) {
+    const beforeGap = withCursor
+      ? this.buffer.slice(0, this.gapStart).join("") +
+        `<span class="cursor">|</span>`
+      : this.buffer.slice(0, this.gapStart).join("");
     const afterGap = this.buffer.slice(this.gapEnd).join("");
     return beforeGap.concat(afterGap);
   }
@@ -164,41 +148,101 @@ class Buffer {
 }
 
 class Editor {
-  constructor() {}
-  print(element) {
-    const text = element.buffer.print();
-    element.DOMNode.innerHTML = text;
+  constructor() {
+    this.elements = [
+      {
+        type: "p",
+        DOMNode: page.appendChild(document.createElement("p")),
+        buffer: new Buffer(),
+        styles: [],
+      },
+    ];
+    this.length = 0;
+    this.currentTextBuffer = this.elements[this.length];
   }
-  createNewText(currentElement, gapBuffer) {
+  print(withCursor) {
+    const text = this.currentTextBuffer.buffer.print(withCursor);
+    this.currentTextBuffer.DOMNode.innerHTML = text;
+  }
+  getBuffer() {
+    return this.currentTextBuffer.buffer;
+  }
+  setBuffer(index) {
+    this.print(false);
+    this.length = index;
+    this.currentTextBuffer = this.elements[this.length];
+  }
+  createNewText(type) {
     const newTextBuffer = {
-      type: "p",
-      DOMNode: page.appendChild(document.createElement("p")),
+      type: type,
+      DOMNode: page.appendChild(document.createElement(type)),
       buffer: new Buffer(),
       styles: [],
     };
-    elements.push(newTextBuffer);
-    gapBuffer = newTextBuffer.buffer;
-    currentElement = newTextBuffer.DOMNode;
+    this.print(false);
+    this.elements.push(newTextBuffer);
+    this.length += 1;
+    this.currentTextBuffer = newTextBuffer;
+  }
+  eraseBuff() {
+    if (this.currentTextBuffer !== null && this.length !== 0) {
+      page.removeChild(this.currentTextBuffer.DOMNode);
+      this.setBuffer(this.length - 1);
+      this.elements.splice(this.length + 1, 1);
+    }
   }
 }
 
+class Toolbar {
+  constructor() {}
+  getBtn(id) {
+    const btn = document.getElementById(id);
+    return btn;
+  }
+}
+
+const page = document.getElementById("text-editor");
+const toolbar = document.getElementById("tool-bar");
+const defaultPadding = 15;
 const editor = new Editor();
-const elements = [
-  {
-    type: "p",
-    DOMNode: page.appendChild(document.createElement("p")),
-    buffer: new Buffer(),
-    styles: [],
-  },
-];
-let currentElement = elements[0];
-let gapBuffer = currentElement.buffer;
+const myToolbar = new Toolbar();
+const h1Btn = myToolbar.getBtn("h1");
+let elemType = "p";
+
+h1Btn.addEventListener("click", () => (elemType = "h1"));
+
+const initialize = () => {
+  resize();
+};
+
+const resize = () => {
+  const toolbarHight = toolbar.getBoundingClientRect().height;
+  const docHeight = window.innerHeight - toolbarHight - defaultPadding * 2;
+  const checkWidth = window.innerWidth - defaultPadding * 2;
+  const docWidth = checkWidth < 400 ? 400 : checkWidth / 2;
+  page.style.height = `${docHeight}px`;
+  page.style.width = `${docWidth}px`;
+  page.style.padding = `${defaultPadding}px`;
+};
+
+page.addEventListener("click", (e) => {
+  const element = e.target;
+  if (element !== page) {
+    const index = Array.prototype.indexOf.call(page.children, element);
+    editor.setBuffer(index);
+  }
+});
+
 page.addEventListener("keydown", (e) => {
   e.preventDefault();
   const key = e.key;
+  const gapBuffer = editor.getBuffer();
   switch (key) {
     case "Backspace":
-      gapBuffer.erase(gapBuffer.getCurrentPos());
+      const buffSize = gapBuffer.erase(gapBuffer.getCurrentPos());
+      if (buffSize === 0) {
+        editor.eraseBuff();
+      }
       break;
     case "ArrowLeft":
       gapBuffer.movePosBack(1);
@@ -213,24 +257,28 @@ page.addEventListener("keydown", (e) => {
     case "Shift":
       break;
     case "Enter":
-      editor.createNewText(currentElement, gapBuffer);
+      editor.createNewText(elemType);
       break;
     default:
       gapBuffer.insert(e.key, gapBuffer.getCurrentPos());
       break;
   }
-  editor.print(currentElement);
+  editor.print(true);
   console.log(gapBuffer.printRaw());
 });
 
 page.addEventListener("focusout", (e) => {
   const cursor = document.querySelector(".cursor");
-  cursor.classList.add("hidden");
+  if (cursor) {
+    cursor.classList.add("hidden");
+  }
 });
 
 page.addEventListener("focusin", (e) => {
   const cursor = document.querySelector(".cursor");
-  cursor.classList.remove("hidden");
+  if (cursor) {
+    cursor.classList.remove("hidden");
+  }
 });
 
 page.addEventListener("click", (e) => {
@@ -238,8 +286,6 @@ page.addEventListener("click", (e) => {
 });
 
 page.addEventListener("mouseup", (e) => {
-  // checkForSelection()
-  console.log(e);
   const selection = window.getSelection();
   const selectedText = selection.toString();
   if (selectedText !== "") {
@@ -257,8 +303,6 @@ page.addEventListener("mouseup", (e) => {
     gapBuffer.printSelection(completeStartIndex, completeEndIndex);
   }
 });
-
-const checkForSelection = () => {};
 
 window.addEventListener("resize", resize);
 window.addEventListener("DOMContentLoaded", initialize);
