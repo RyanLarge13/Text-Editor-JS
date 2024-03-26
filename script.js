@@ -159,6 +159,7 @@ class Editor {
     ];
     this.length = 0;
     this.currentTextBuffer = this.elements[this.length];
+    this.print(true);
   }
   print(withCursor) {
     const text = this.currentTextBuffer.buffer.print(withCursor);
@@ -171,6 +172,13 @@ class Editor {
     this.print(false);
     this.length = index;
     this.currentTextBuffer = this.elements[this.length];
+  }
+  setElemType(elem) {
+    this.currentTextBuffer.type = elem;
+    const newElem = document.createElement(elem);
+    newElem.innerHTML = this.currentTextBuffer.buffer.print(true);
+    page.replaceChild(newElem, this.currentTextBuffer.DOMNode);
+    this.currentTextBuffer.DOMNode = newElem;
   }
   createNewText(type) {
     const newTextBuffer = {
@@ -209,7 +217,9 @@ const myToolbar = new Toolbar();
 const h1Btn = myToolbar.getBtn("h1");
 let elemType = "p";
 
-h1Btn.addEventListener("click", () => (elemType = "h1"));
+h1Btn.addEventListener("click", () => {
+  editor.setElemType("h1");
+});
 
 const initialize = () => {
   resize();
@@ -230,6 +240,7 @@ page.addEventListener("click", (e) => {
   if (element !== page) {
     const index = Array.prototype.indexOf.call(page.children, element);
     editor.setBuffer(index);
+    editor.print(true);
   }
 });
 
@@ -257,7 +268,7 @@ page.addEventListener("keydown", (e) => {
     case "Shift":
       break;
     case "Enter":
-      editor.createNewText(elemType);
+      gapBuffer.insert("\n", gapBuffer.getCurrentPos());
       break;
     default:
       gapBuffer.insert(e.key, gapBuffer.getCurrentPos());
