@@ -20,14 +20,14 @@ class Buffer {
       this.gapEnd -= offset;
       this.indexState = index;
     } else if (index > this.gapStart) {
-      const offset = this.gapStart - index;
+      const offset = index - this.gapStart;
       this.buffer.splice(
-        this.gapStart,
+        index,
         0,
-        ...this.buffer.splice(this.gapEnd, offset)
+        ...this.buffer.splice(this.gapStart, this.gapEnd - this.gapStart)
       );
-      this.gapStart += offset;
-      this.gapEnd = index;
+      this.gapStart = index;
+      this.gapEnd += offset;
       this.indexState = index;
     }
   }
@@ -117,13 +117,14 @@ class Buffer {
       this.indexState = 0;
       return;
     }
-    for (let i = this.gapStart; i >= this.gapStart - amount; i--) {
-      this.buffer[this.gapEnd - 1] = this.buffer[i];
-      this.buffer[i] = " ";
-    }
-    this.indexState -= amount;
-    this.gapStart -= amount;
-    this.gapEnd -= amount;
+    this.moveGap(this.getCurrentPos() - amount);
+    // for (let i = this.gapStart; i >= this.gapStart - amount; i--) {
+    //   this.buffer[this.gapEnd - 1] = this.buffer[i];
+    //   this.buffer[i] = " ";
+    // }
+    // this.indexState -= amount;
+    // this.gapStart -= amount;
+    // this.gapEnd -= amount;
   }
 
   movePosForward(amount) {
@@ -133,15 +134,15 @@ class Buffer {
     ) {
       return;
     }
-    for (let i = 0; i < amount; i++) {
-      this.buffer[this.gapStart] = this.buffer[this.gapEnd];
-      this.buffer[this.gapEnd] = " ";
-    }
-    this.indexState += amount;
-    this.gapStart += amount;
-    this.gapEnd += amount;
+    this.moveGap(this.getCurrentPos() + amount);
+    // for (let i = 0; i < amount; i++) {
+    //   this.buffer[this.gapStart] = this.buffer[this.gapEnd];
+    //   this.buffer[this.gapEnd] = " ";
+    // }
+    // this.indexState += amount;
+    // this.gapStart += amount;
+    // this.gapEnd += amount;
   }
-
   getSize() {
     return this.buffer.length;
   }
