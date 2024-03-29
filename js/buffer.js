@@ -88,12 +88,12 @@ class Buffer {
   }
 
   print(withCursor) {
-    const beforeGap = withCursor
-      ? this.buffer.slice(0, this.gapStart).join("") +
-        `<span class="cursor">|</span>`
-      : this.buffer.slice(0, this.gapStart).join("");
-    const afterGap = this.buffer.slice(this.gapEnd).join("");
-    return beforeGap.concat(afterGap);
+    let beforeGap = this.buffer.slice(0, this.gapStart).join("");
+    let afterGap = this.buffer.slice(this.gapEnd).join("");
+    if (withCursor) {
+      beforeGap += `<span class="cursor">|</span>`;
+    }
+    return beforeGap + afterGap;
   }
 
   printRaw() {

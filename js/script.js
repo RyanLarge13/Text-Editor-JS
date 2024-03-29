@@ -37,6 +37,8 @@ page.addEventListener("keydown", (e) => {
   e.preventDefault();
   const key = e.key;
   const gapBuffer = editor.getBuffer();
+  const rawBuff = gapBuffer.printRaw();
+  const containsNewLine = rawBuff.includes("\n");
   switch (key) {
     case "Backspace":
       const buffSize = gapBuffer.erase(gapBuffer.getCurrentPos());
@@ -49,6 +51,24 @@ page.addEventListener("keydown", (e) => {
       break;
     case "ArrowRight":
       gapBuffer.movePosForward(1);
+      break;
+    case "ArrowUp":
+      if (containsNewLine) {
+        const index = rawBuff.lastIndexOf("\n", gapBuffer.getCurrentPos());
+        if (index === -1) {
+          break;
+        }
+        gapBuffer.moveGap(index);
+      }
+      break;
+    case "ArrowDown":
+      if (containsNewLine) {
+        const index = rawBuff.indexOf("\n", gapBuffer.getCurrentPos() + 1);
+        if (index === -1) {
+          break;
+        }
+        gapBuffer.moveGap(index);
+      }
       break;
     case "Tab":
       gapBuffer.insert(" ", gapBuffer.getCurrentPos());
@@ -81,27 +101,23 @@ page.addEventListener("focusin", (e) => {
   }
 });
 
-page.addEventListener("click", (e) => {
-  page.focus();
-});
-
 page.addEventListener("mouseup", (e) => {
-  const selection = window.getSelection();
-  const selectedText = selection.toString();
-  if (selectedText !== "") {
-    const range = selection.getRangeAt(0);
-    const start = range.startOffset;
-    const end = range.endOffset;
-    const completeStartIndex =
-      start < gapBuffer.getCurrentPos()
-        ? start
-        : start + (gapBuffer.getGapEnd() - gapBuffer.getCurrentPos());
-    const completeEndIndex =
-      end < gapBuffer.getCurrentPos()
-        ? end
-        : end + (gapBuffer.getGapEnd() - gapBuffer.getCurrentPos());
-    gapBuffer.printSelection(completeStartIndex, completeEndIndex);
-  }
+  // const selection = window.getSelection();
+  // const selectedText = selection.toString();
+  // if (selectedText !== "") {
+  //   const range = selection.getRangeAt(0);
+  //   const start = range.startOffset;
+  //   const end = range.endOffset;
+  //   const completeStartIndex =
+  //     start < gapBuffer.getCurrentPos()
+  //       ? start
+  //       : start + (gapBuffer.getGapEnd() - gapBuffer.getCurrentPos());
+  //   const completeEndIndex =
+  //     end < gapBuffer.getCurrentPos()
+  //       ? end
+  //       : end + (gapBuffer.getGapEnd() - gapBuffer.getCurrentPos());
+  //   gapBuffer.printSelection(completeStartIndex, completeEndIndex);
+  // }
 });
 
 h1Btn.addEventListener("click", () => {

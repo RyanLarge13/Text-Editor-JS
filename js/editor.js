@@ -57,19 +57,22 @@ class Editor {
   }
   clickHandler(e) {
     const p = e.target;
-    let text = p.textContent;
+    const c = p.querySelector(".cursor");
+    // let text = p.textContent;
     let selection = window.getSelection();
     let range = selection.getRangeAt(0);
     range.setStart(p, 0);
     let clickPos = range.endOffset;
+    range.setStart(c, 0);
+    let clickPos2 = range.endOffset;
     const currentPos = this.currentTextBuffer.buffer.getCurrentPos();
-    const length = text.length - 1;
-    console.log(clickPos, currentPos, length);
-    if (length - currentPos > clickPos) {
-      console.log("more");
-    }
-    if (length - currentPos < clickPos) {
-      console.log("less");
+    // const length = text.length - 1;
+    // console.log(clickPos, clickPos2, currentPos, length);
+    if (clickPos2 <= 0) {
+      this.currentTextBuffer.buffer.moveGap(clickPos);
+    } else {
+      const index = currentPos + clickPos;
+      this.currentTextBuffer.buffer.moveGap(index);
     }
   }
 }

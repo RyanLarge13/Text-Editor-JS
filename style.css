@@ -74,7 +74,7 @@ p {
   display: inline;
   font-weight: 500;
   padding: -2px;
-  margin: -2px;
+  margin: -2.25px;
   pointer-events: none;
   animation-name: cursor;
   color: #777;
