@@ -118,13 +118,6 @@ class Buffer {
       return;
     }
     this.moveGap(this.getCurrentPos() - amount);
-    // for (let i = this.gapStart; i >= this.gapStart - amount; i--) {
-    //   this.buffer[this.gapEnd - 1] = this.buffer[i];
-    //   this.buffer[i] = " ";
-    // }
-    // this.indexState -= amount;
-    // this.gapStart -= amount;
-    // this.gapEnd -= amount;
   }
 
   movePosForward(amount) {
@@ -135,13 +128,6 @@ class Buffer {
       return;
     }
     this.moveGap(this.getCurrentPos() + amount);
-    // for (let i = 0; i < amount; i++) {
-    //   this.buffer[this.gapStart] = this.buffer[this.gapEnd];
-    //   this.buffer[this.gapEnd] = " ";
-    // }
-    // this.indexState += amount;
-    // this.gapStart += amount;
-    // this.gapEnd += amount;
   }
   getSize() {
     return this.buffer.length;

@@ -36,17 +36,26 @@ class Editor {
     this.page.replaceChild(newElem, this.currentTextBuffer.DOMNode);
     this.currentTextBuffer.DOMNode = newElem;
   }
-  createNewText(type) {
+  getElemType() {
+    const element = this.currentTextBuffer.DOMNode.tagName.toLowerCase();
+    return element;
+  }
+  createNewText(type, styles) {
     const newTextBuffer = {
       type: type,
       DOMNode: this.page.appendChild(document.createElement(type)),
       buffer: new Buffer(),
       styles: [],
     };
+    if (styles) {
+      Object.assign(newTextBuffer.DOMNode.style, styles);
+    }
+    newTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
     this.print(false);
     this.elements.push(newTextBuffer);
     this.length += 1;
     this.currentTextBuffer = newTextBuffer;
+    this.print(true);
   }
   eraseBuff() {
     if (this.currentTextBuffer !== null && this.length !== 0) {
@@ -55,10 +64,12 @@ class Editor {
       this.elements.splice(this.length + 1, 1);
     }
   }
+  updateBufferStyle(styles) {
+    Object.assign(this.currentTextBuffer.DOMNode.style, styles);
+  }
   clickHandler(e) {
     const p = e.target;
     const c = p.querySelector(".cursor");
-    // let text = p.textContent;
     let selection = window.getSelection();
     let range = selection.getRangeAt(0);
     range.setStart(p, 0);
@@ -66,8 +77,6 @@ class Editor {
     range.setStart(c, 0);
     let clickPos2 = range.endOffset;
     const currentPos = this.currentTextBuffer.buffer.getCurrentPos();
-    // const length = text.length - 1;
-    // console.log(clickPos, clickPos2, currentPos, length);
     if (clickPos2 <= 0) {
       this.currentTextBuffer.buffer.moveGap(clickPos);
     } else {
