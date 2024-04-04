@@ -105,11 +105,11 @@ page.addEventListener("keydown", (e) => {
       if (type === "li") {
         const gapBuffLen = gapBuffer.print().length;
         if (gapBuffLen > 0) {
-          editor.createNewText("li");
+          editor.createNewText(["li"]);
           break;
         } else {
           editor.eraseBuff();
-          editor.createNewText("p");
+          editor.createNewText(["p"]);
           break;
         }
       }
@@ -157,27 +157,27 @@ page.addEventListener("mouseup", (e) => {
 });
 
 h1Btn.addEventListener("click", () => {
-  editor.createNewText("h1");
+  editor.createNewText(["h1"]);
   page.focus();
 });
 
 boldBtn.addEventListener("click", () => {
-  editor.createNewText("p", { fontWeight: 600 });
+  editor.createNewText(["p"], { fontWeight: 600 });
   page.focus();
 });
 
 italicBtn.addEventListener("click", () => {
-  editor.createNewText("p", { fontStyle: "italic" });
+  editor.createNewText(["p"], { fontStyle: "italic" });
   page.focus();
 });
 
 underlineBtn.addEventListener("click", () => {
-  editor.createNewText("p", { textDecoration: "underline" });
+  editor.createNewText(["p"], { textDecoration: "underline" });
   page.focus();
 });
 
 strikeThroughBtn.addEventListener("click", () => {
-  editor.createNewText("p", { textDecoration: "line-through" });
+  editor.createNewText(["p"], { textDecoration: "line-through" });
   page.focus();
 });
 
@@ -197,7 +197,7 @@ rightBtn.addEventListener("click", () => {
 });
 
 ulBtn.addEventListener("click", () => {
-  editor.createNewText("li");
+  editor.createNewText(["ul", "li"]);
   page.focus();
 });
 

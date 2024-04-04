@@ -74,7 +74,7 @@ h1 {
 
 .cursor {
   display: inline;
-  font-weight: 500;
+  font-weight: normal;
   padding: -2px;
   margin: -2.25px;
   pointer-events: none;

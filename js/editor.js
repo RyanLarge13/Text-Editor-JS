@@ -40,10 +40,21 @@ class Editor {
     const element = this.currentTextBuffer.DOMNode.tagName.toLowerCase();
     return element;
   }
-  createNewText(type, styles) {
+  createNewText(types, styles) {
+    const newElem = document.createElement(types[0]);
+    let lastElem = newElem;
+    for (let i = 0; i < types.length; i++) {
+      const nextElemExists = types[i + 1];
+      if (nextElemExists) {
+        const nextElem = document.createElement(nextElemExists);
+        newElem.appendChild(nextElem);
+        lastElem = nextElem;
+      }
+    }
+    this.page.appendChild(newElem);
     const newTextBuffer = {
-      type: type,
-      DOMNode: this.page.appendChild(document.createElement(type)),
+      type: lastElem.tagName.toLowerCase(),
+      DOMNode: lastElem,
       buffer: new Buffer(),
       styles: [],
     };
@@ -51,6 +62,7 @@ class Editor {
       Object.assign(newTextBuffer.DOMNode.style, styles);
     }
     newTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
+    console.log(newTextBuffer);
     this.print(false);
     this.elements.push(newTextBuffer);
     this.length += 1;
@@ -68,11 +80,11 @@ class Editor {
     Object.assign(this.currentTextBuffer.DOMNode.style, styles);
   }
   clickHandler(e) {
-    const p = e.target;
-    const c = p.querySelector(".cursor");
+    const elem = e.target;
+    const c = elem.querySelector(".cursor");
     let selection = window.getSelection();
     let range = selection.getRangeAt(0);
-    range.setStart(p, 0);
+    range.setStart(elem, 0);
     let clickPos = range.endOffset;
     range.setStart(c, 0);
     let clickPos2 = range.endOffset;
