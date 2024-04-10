@@ -35,16 +35,6 @@ const resize = () => {
   page.style.padding = `${defaultPadding}px`;
 };
 
-// Event listeners
-page.addEventListener("click", (e) => {
-  const element = e.target;
-  if (element !== page) {
-    const index = Array.prototype.indexOf.call(page.children, element);
-    editor.setBuffer(index);
-    editor.print(true);
-  }
-});
-
 const moveArrowUp = (gapBuffer) => {
   const rawBuffer = gapBuffer.printRaw();
   const containsNewLine = rawBuffer.includes("\n");

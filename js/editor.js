@@ -81,20 +81,32 @@ class Editor {
   }
   clickHandler(e) {
     const elem = e.target;
-    const c = elem.querySelector(".cursor");
+    if (this.currentTextBuffer.DOMNode !== elem) {
+      for (let i = 0; i < this.elements.length; i++) {
+        if (this.elements[i].DOMNode === elem) {
+          this.currentTextBuffer = this.elements[i];
+          break;
+        }
+      }
+    }
     let selection = window.getSelection();
     let range = selection.getRangeAt(0);
     range.setStart(elem, 0);
     let clickPos = range.endOffset;
-    range.setStart(c, 0);
-    let clickPos2 = range.endOffset;
-    const currentPos = this.currentTextBuffer.buffer.getCurrentPos();
-    if (clickPos2 <= 0) {
-      this.currentTextBuffer.buffer.moveGap(clickPos);
-    } else {
-      const index = currentPos + clickPos;
-      this.currentTextBuffer.buffer.moveGap(index);
+    const c = elem.querySelector(".cursor");
+    if (c) {
+      range.setStart(c, 0);
     }
+    let clickPos2 = range.endOffset;
+    console.log(clickPos, clickPos2);
+    if (clickPos2 > 0) {
+      this.currentTextBuffer.buffer.moveGap(
+        clickPos2 + this.currentTextBuffer.buffer.getCurrentPos()
+      );
+    } else {
+      this.currentTextBuffer.buffer.moveGap(clickPos);
+    }
+    this.print(true);
   }
 }
 
