@@ -157,7 +157,7 @@ boldBtn.addEventListener("click", () => {
 });
 
 italicBtn.addEventListener("click", () => {
-  editor.createNewText(["p"], { fontStyle: "italic" });
+  editor.replaceText(["p", "span"], { fontStyle: "italic" });
   page.focus();
 });
 
