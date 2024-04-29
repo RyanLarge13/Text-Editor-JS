@@ -19,6 +19,7 @@ const ulBtn = myToolbar.getBtn("ul");
 const olBtn = myToolbar.getBtn("ol");
 const indentBtn = myToolbar.getBtn("tab-in");
 const outdentBtn = myToolbar.getBtn("tab-out");
+const activeBtns = [];
 
 // Initialization calls
 const initialize = () => {
@@ -103,7 +104,7 @@ page.addEventListener("keydown", (e) => {
           break;
         }
       }
-      gapBuffer.insert("\n", gapBuffer.getCurrentPos());
+      editor.createNewText(["p"]);
       break;
     default:
       gapBuffer.insert(e.key, gapBuffer.getCurrentPos());
@@ -152,7 +153,9 @@ h1Btn.addEventListener("click", () => {
 });
 
 boldBtn.addEventListener("click", () => {
-  editor.createNewText(["p"], { fontWeight: 600 });
+  editor.nestElem(["span"], {
+    fontWeight: 600,
+  });
   page.focus();
 });
 

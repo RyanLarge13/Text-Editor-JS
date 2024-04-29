@@ -11,12 +11,6 @@ body {
   font-size: 14px;
 }
 
-p,
-h1 {
-  white-space: pre-wrap;
-  display: inline;
-}
-
 .doc-and-title {
   display: flex;
 }

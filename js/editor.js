@@ -19,6 +19,11 @@ class Editor {
   }
 
   print(withCursor) {
+    const node = this.currentTextBuffer.DOMNode;
+    const childrenNodes = node.children;
+    for (let i = 0; i < childrenNodes.length; i++) {
+      console.log(childrenNodes[i]);
+    }
     const text = this.currentTextBuffer.buffer.print(withCursor);
     this.currentTextBuffer.DOMNode.innerHTML = text;
   }
@@ -76,11 +81,28 @@ class Editor {
     this.print(true);
   }
 
+  nestElem(type, styles) {
+    this.print(false);
+    const currentElem = this.currentTextBuffer.DOMNode;
+    const newElem = document.createElement(type);
+    currentElem.appendChild(newElem);
+    const newTextBuffer = {
+      type: type,
+      DOMNode: newElem,
+      buffer: new Buffer(),
+      styles: [],
+    };
+    if (styles) {
+      Object.assign(newTextBuffer.DOMNode.style, styles);
+    }
+    this.currentTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
+    this.currentTextBuffer = newTextBuffer;
+    this.print(true);
+  }
+
   replaceText(types, styles) {
     const currentElem = this.getElemType();
     const newElem = document.createElement(currentElem);
-    const text = this.currentTextBuffer.buffer.print(false);
-    newElem.innerHTML = text;
     let lastElem = newElem;
     for (let i = 0; i < types.length; i++) {
       const nextElemExists = types[i + 1];
