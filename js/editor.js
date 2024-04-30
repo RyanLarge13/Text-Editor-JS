@@ -8,7 +8,9 @@ class Editor {
         type: "p",
         DOMNode: this.page.appendChild(document.createElement("p")),
         buffer: new Buffer(),
-        styles: [],
+        styles: {},
+        children: [],
+        parent: this.page,
       },
     ];
     this.length = 0;
@@ -19,12 +21,8 @@ class Editor {
   }
 
   print(withCursor) {
-    const node = this.currentTextBuffer.DOMNode;
-    const childrenNodes = node.children;
-    for (let i = 0; i < childrenNodes.length; i++) {
-      console.log(childrenNodes[i]);
-    }
     const text = this.currentTextBuffer.buffer.print(withCursor);
+    // console.log(text);
     this.currentTextBuffer.DOMNode.innerHTML = text;
   }
 
@@ -51,6 +49,17 @@ class Editor {
     return element;
   }
 
+  findElem(elem) {
+    let foundElem;
+    for (let i = 0; i < this.elements.length; i++) {
+      if (this.elements[i].DOMNode === elem) {
+        foundElem = this.elements[i];
+        break;
+      }
+    }
+    return foundElem;
+  }
+
   createNewText(types, styles) {
     const newElem = document.createElement(types[0]);
     let lastElem = newElem;
@@ -67,7 +76,9 @@ class Editor {
       type: lastElem.tagName.toLowerCase(),
       DOMNode: lastElem,
       buffer: new Buffer(),
-      styles: [],
+      styles: styles,
+      children: [],
+      parent: this.page,
     };
     if (styles) {
       Object.assign(newTextBuffer.DOMNode.style, styles);
@@ -83,51 +94,32 @@ class Editor {
 
   nestElem(type, styles) {
     this.print(false);
-    const currentElem = this.currentTextBuffer.DOMNode;
+    let currentElem;
     const newElem = document.createElement(type);
+    const parent = this.currentTextBuffer.parent;
+    if (parent === this.page) {
+      currentElem = this.currentTextBuffer.DOMNode;
+    } else {
+      currentElem = this.currentTextBuffer.parent;
+    }
     currentElem.appendChild(newElem);
+    const elemRef = this.findElem(currentElem);
+    elemRef.children.push(newElem);
     const newTextBuffer = {
       type: type,
       DOMNode: newElem,
       buffer: new Buffer(),
-      styles: [],
+      styles: { ...styles, ...this.currentTextBuffer.styles },
+      children: [],
+      parent: currentElem,
     };
     if (styles) {
-      Object.assign(newTextBuffer.DOMNode.style, styles);
+      Object.assign(newTextBuffer.DOMNode.style, {
+        ...styles,
+        ...this.currentTextBuffer.styles,
+      });
     }
     this.currentTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
-    this.currentTextBuffer = newTextBuffer;
-    this.print(true);
-  }
-
-  replaceText(types, styles) {
-    const currentElem = this.getElemType();
-    const newElem = document.createElement(currentElem);
-    let lastElem = newElem;
-    for (let i = 0; i < types.length; i++) {
-      const nextElemExists = types[i + 1];
-      if (nextElemExists) {
-        const nextElem = document.createElement(nextElemExists);
-        newElem.appendChild(nextElem);
-        lastElem = nextElem;
-      }
-    }
-    this.eraseBuff();
-    this.page.appendChild(newElem);
-    const newTextBuffer = {
-      type: lastElem.tagName.toLowerCase(),
-      DOMNode: lastElem,
-      buffer: new Buffer(),
-      styles: [],
-    };
-    if (styles) {
-      Object.assign(newTextBuffer.DOMNode.style, styles);
-    }
-    newTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
-    console.log(newTextBuffer);
-    this.print(false);
-    this.elements.push(newTextBuffer);
-    this.length += 1;
     this.currentTextBuffer = newTextBuffer;
     this.print(true);
   }

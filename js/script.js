@@ -111,7 +111,7 @@ page.addEventListener("keydown", (e) => {
       break;
   }
   editor.print(true);
-  console.log(gapBuffer.printRaw());
+  // console.log(gapBuffer.printRaw());
 });
 
 page.addEventListener("focusout", (e) => {
@@ -153,6 +153,7 @@ h1Btn.addEventListener("click", () => {
 });
 
 boldBtn.addEventListener("click", () => {
+  myToolbar.toggleBtns("bold");
   editor.nestElem(["span"], {
     fontWeight: 600,
   });
@@ -160,31 +161,37 @@ boldBtn.addEventListener("click", () => {
 });
 
 italicBtn.addEventListener("click", () => {
-  editor.replaceText(["p", "span"], { fontStyle: "italic" });
+  myToolbar.toggleBtns("italic");
+  editor.nestElem(["span"], { fontStyle: "italic" });
   page.focus();
 });
 
 underlineBtn.addEventListener("click", () => {
+  myToolbar.toggleBtns("underline");
   editor.createNewText(["p"], { textDecoration: "underline" });
   page.focus();
 });
 
 strikeThroughBtn.addEventListener("click", () => {
+  myToolbar.toggleBtns("line-through");
   editor.createNewText(["p"], { textDecoration: "line-through" });
   page.focus();
 });
 
 leftBtn.addEventListener("click", () => {
+  myToolbar.toggleBtns("left");
   editor.updateBufferStyle({ textAlign: "left" });
   page.focus();
 });
 
 centerBtn.addEventListener("click", () => {
+  myToolbar.toggleBtns("center");
   editor.updateBufferStyle({ textAlign: "center" });
   page.focus();
 });
 
 rightBtn.addEventListener("click", () => {
+  myToolbar.toggleBtns("right");
   editor.updateBufferStyle({ textAlign: "right" });
   page.focus();
 });
