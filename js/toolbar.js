@@ -1,6 +1,7 @@
 class Toolbar {
   constructor() {
     this.toggles = [];
+    this.allBtns = document.querySelectorAll("toolbar-btn");
   }
 
   getBtn(id) {
@@ -8,23 +9,37 @@ class Toolbar {
     return btn;
   }
 
+  styleActiveBtns(btn, toggle) {
+    const theBtn = document.querySelector(`.${btn}`);
+    if (!theBtn) {
+      return;
+    }
+    if (toggle) {
+      theBtn.classList.add("active-btn");
+    }
+    if (!toggle) {
+      theBtn.classList.remove("active-btn");
+    }
+  }
+
   toggleBtns(btn) {
     if (this.toggles.length < 1) {
       this.toggles.push(btn);
-      console.log(this.toggles);
-      return;
+      this.styleActiveBtns(btn, true);
+      return true;
     }
     const contains = this.toggles.includes(btn);
     if (contains) {
       const newToggles = this.toggles.filter((aBtn) => aBtn !== btn);
       this.toggles = newToggles;
-      console.log(this.toggles);
-      return;
+      this.styleActiveBtns(btn, false);
+      return false;
     }
     if (!contains) {
       this.toggles.push(btn);
+      this.styleActiveBtns(btn, true);
+      return true;
     }
-    console.log(this.toggles);
   }
 }
 

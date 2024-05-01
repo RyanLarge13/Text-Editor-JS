@@ -153,10 +153,11 @@ h1Btn.addEventListener("click", () => {
 });
 
 boldBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns("bold");
-  editor.nestElem(["span"], {
-    fontWeight: 600,
-  });
+  const btnState = myToolbar.toggleBtns("bold");
+  const currentStyles = editor.getCurrentStyles();
+  const newStyles = { fontWeight: 600 };
+  let stylesToAdd = {};
+  editor.nestElem(["span"], btnState, stylesToAdd);
   page.focus();
 });
 

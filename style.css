@@ -44,6 +44,7 @@ body {
   outline: none;
   margin: 0 2.5px;
   cursor: pointer;
+  transition: 200ms ease-in-out;
 }
 
 .editor-container {
@@ -77,6 +78,11 @@ body {
   animation-duration: 900ms;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
+}
+
+.active-btn {
+  background-color: #444;
+  color: #fff;
 }
 
 .hidden {

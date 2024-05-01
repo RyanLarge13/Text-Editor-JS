@@ -49,6 +49,10 @@ class Editor {
     return element;
   }
 
+  getCurrentStyles() {
+    return this.currentTextBuffer.styles;
+  }
+
   findElem(elem) {
     let foundElem;
     for (let i = 0; i < this.elements.length; i++) {
