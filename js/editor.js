@@ -113,15 +113,12 @@ class Editor {
       type: type,
       DOMNode: newElem,
       buffer: new Buffer(),
-      styles: { ...styles, ...this.currentTextBuffer.styles },
+      styles: styles,
       children: [],
       parent: currentElem,
     };
     if (styles) {
-      Object.assign(newTextBuffer.DOMNode.style, {
-        ...styles,
-        ...this.currentTextBuffer.styles,
-      });
+      Object.assign(newTextBuffer.DOMNode.style, styles);
     }
     this.currentTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
     this.currentTextBuffer = newTextBuffer;

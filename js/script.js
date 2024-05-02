@@ -104,7 +104,7 @@ page.addEventListener("keydown", (e) => {
           break;
         }
       }
-      editor.createNewText(["p"]);
+      editor.createNewText(["p"], { ...editor.getCurrentStyles() });
       break;
     default:
       gapBuffer.insert(e.key, gapBuffer.getCurrentPos());
@@ -153,29 +153,64 @@ h1Btn.addEventListener("click", () => {
 });
 
 boldBtn.addEventListener("click", () => {
-  const btnState = myToolbar.toggleBtns("bold");
+  myToolbar.toggleBtns("bold");
   const currentStyles = editor.getCurrentStyles();
   const newStyles = { fontWeight: 600 };
   let stylesToAdd = {};
-  editor.nestElem(["span"], btnState, stylesToAdd);
+  if ("fontWeight" in currentStyles) {
+    delete currentStyles.fontWeight;
+    stylesToAdd = currentStyles;
+  } else {
+    stylesToAdd = { ...currentStyles, ...newStyles };
+  }
+  editor.nestElem(["span"], stylesToAdd);
   page.focus();
 });
 
 italicBtn.addEventListener("click", () => {
   myToolbar.toggleBtns("italic");
-  editor.nestElem(["span"], { fontStyle: "italic" });
+  const currentStyles = editor.getCurrentStyles();
+  const newStyles = { fontStyle: "italic" };
+  let stylesToAdd = {};
+  if ("fontStyle" in currentStyles) {
+    delete currentStyles.fontStyle;
+    stylesToAdd = currentStyles;
+  } else {
+    stylesToAdd = { ...currentStyles, ...newStyles };
+  }
+  editor.nestElem(["span"], stylesToAdd);
   page.focus();
 });
 
 underlineBtn.addEventListener("click", () => {
   myToolbar.toggleBtns("underline");
-  editor.createNewText(["p"], { textDecoration: "underline" });
+  const currentStyles = editor.getCurrentStyles();
+  const newStyles = { textDecoration: "underline" };
+  let stylesToAdd = {};
+  const textDecoration = currentStyles.textDecoration;
+  if (textDecoration && textDecoration === "underline") {
+    delete currentStyles.textDecoration;
+    stylesToAdd = currentStyles;
+  } else {
+    stylesToAdd = { ...currentStyles, ...newStyles };
+  }
+  editor.createNewText(["p"], stylesToAdd);
   page.focus();
 });
 
 strikeThroughBtn.addEventListener("click", () => {
   myToolbar.toggleBtns("line-through");
-  editor.createNewText(["p"], { textDecoration: "line-through" });
+  const currentStyles = editor.getCurrentStyles();
+  const newStyles = { textDecoration: "line-through" };
+  let stylesToAdd = {};
+  const textDecoration = currentStyles.textDecoration;
+  if (textDecoration && textDecoration === "line-through") {
+    delete currentStyles.textDecoration;
+    stylesToAdd = currentStyles;
+  } else {
+    stylesToAdd = { ...currentStyles, ...newStyles };
+  }
+  editor.createNewText(["p"], stylesToAdd);
   page.focus();
 });
 
@@ -198,7 +233,7 @@ rightBtn.addEventListener("click", () => {
 });
 
 ulBtn.addEventListener("click", () => {
-  editor.createNewText(["ul", "li"]);
+  editor.createNewText(["ul", "li"], editor.getCurrentStyles());
   page.focus();
 });
 
