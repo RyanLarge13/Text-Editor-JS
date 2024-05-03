@@ -22,24 +22,26 @@ class Toolbar {
     }
   }
 
-  toggleBtns(btn) {
-    if (this.toggles.length < 1) {
-      this.toggles.push(btn);
-      this.styleActiveBtns(btn, true);
-      return true;
-    }
-    const contains = this.toggles.includes(btn);
-    if (contains) {
-      const newToggles = this.toggles.filter((aBtn) => aBtn !== btn);
-      this.toggles = newToggles;
-      this.styleActiveBtns(btn, false);
-      return false;
-    }
-    if (!contains) {
-      this.toggles.push(btn);
-      this.styleActiveBtns(btn, true);
-      return true;
-    }
+  toggleBtns(btns, toggle) {
+    btns.forEach((btn) => {
+      if (this.toggles.length < 1) {
+        this.toggles.push(btn);
+        this.styleActiveBtns(btn, toggle);
+        return true;
+      }
+      const contains = this.toggles.includes(btn);
+      if (contains) {
+        const newToggles = this.toggles.filter((aBtn) => aBtn !== btn);
+        this.toggles = newToggles;
+        this.styleActiveBtns(btn, toggle);
+        return false;
+      }
+      if (!contains) {
+        this.toggles.push(btn);
+        this.styleActiveBtns(btn, toggle);
+        return true;
+      }
+    });
   }
 }
 

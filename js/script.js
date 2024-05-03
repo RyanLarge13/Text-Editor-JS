@@ -104,7 +104,11 @@ page.addEventListener("keydown", (e) => {
           break;
         }
       }
-      editor.createNewText(["p"], { ...editor.getCurrentStyles() });
+      editor.createNewText(["p"], {});
+      myToolbar.styleActiveBtns(
+        ["bold", "italic", "line-through", "underline"],
+        false
+      );
       break;
     default:
       gapBuffer.insert(e.key, gapBuffer.getCurrentPos());
@@ -216,18 +220,21 @@ strikeThroughBtn.addEventListener("click", () => {
 
 leftBtn.addEventListener("click", () => {
   myToolbar.toggleBtns("left");
+  myToolbar.styleActiveBtns(["center", "right"], false);
   editor.updateBufferStyle({ textAlign: "left" });
   page.focus();
 });
 
 centerBtn.addEventListener("click", () => {
   myToolbar.toggleBtns("center");
+  myToolbar.styleActiveBtns(["left", "right"], false);
   editor.updateBufferStyle({ textAlign: "center" });
   page.focus();
 });
 
 rightBtn.addEventListener("click", () => {
   myToolbar.toggleBtns("right");
+  myToolbar.styleActiveBtns(["center", "left"], false);
   editor.updateBufferStyle({ textAlign: "right" });
   page.focus();
 });
