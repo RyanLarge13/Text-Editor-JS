@@ -22,7 +22,6 @@ class Editor {
 
   print(withCursor) {
     const text = this.currentTextBuffer.buffer.print(withCursor);
-    // console.log(text);
     this.currentTextBuffer.DOMNode.innerHTML = text;
   }
 
@@ -88,7 +87,6 @@ class Editor {
       Object.assign(newTextBuffer.DOMNode.style, styles);
     }
     newTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
-    console.log(newTextBuffer);
     this.print(false);
     this.elements.push(newTextBuffer);
     this.length += 1;
@@ -120,6 +118,8 @@ class Editor {
     if (styles) {
       Object.assign(newTextBuffer.DOMNode.style, styles);
     }
+    this.elements.push(newTextBuffer);
+    this.length += 1;
     this.currentTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
     this.currentTextBuffer = newTextBuffer;
     this.print(true);

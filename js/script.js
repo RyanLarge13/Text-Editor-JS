@@ -105,10 +105,7 @@ page.addEventListener("keydown", (e) => {
         }
       }
       editor.createNewText(["p"], {});
-      myToolbar.styleActiveBtns(
-        ["bold", "italic", "line-through", "underline"],
-        false
-      );
+      myToolbar.removeBtns(["bold", "italic", "line-through", "underline"]);
       break;
     default:
       gapBuffer.insert(e.key, gapBuffer.getCurrentPos());
@@ -157,7 +154,7 @@ h1Btn.addEventListener("click", () => {
 });
 
 boldBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns("bold");
+  myToolbar.toggleBtns(["bold"]);
   const currentStyles = editor.getCurrentStyles();
   const newStyles = { fontWeight: 600 };
   let stylesToAdd = {};
@@ -172,7 +169,7 @@ boldBtn.addEventListener("click", () => {
 });
 
 italicBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns("italic");
+  myToolbar.toggleBtns(["italic"]);
   const currentStyles = editor.getCurrentStyles();
   const newStyles = { fontStyle: "italic" };
   let stylesToAdd = {};
@@ -187,7 +184,7 @@ italicBtn.addEventListener("click", () => {
 });
 
 underlineBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns("underline");
+  myToolbar.toggleBtns(["underline"]);
   const currentStyles = editor.getCurrentStyles();
   const newStyles = { textDecoration: "underline" };
   let stylesToAdd = {};
@@ -198,12 +195,12 @@ underlineBtn.addEventListener("click", () => {
   } else {
     stylesToAdd = { ...currentStyles, ...newStyles };
   }
-  editor.createNewText(["p"], stylesToAdd);
+  editor.nestElem(["span"], stylesToAdd);
   page.focus();
 });
 
 strikeThroughBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns("line-through");
+  myToolbar.toggleBtns(["line-through"]);
   const currentStyles = editor.getCurrentStyles();
   const newStyles = { textDecoration: "line-through" };
   let stylesToAdd = {};
@@ -214,27 +211,27 @@ strikeThroughBtn.addEventListener("click", () => {
   } else {
     stylesToAdd = { ...currentStyles, ...newStyles };
   }
-  editor.createNewText(["p"], stylesToAdd);
+  editor.nestElem(["span"], stylesToAdd);
   page.focus();
 });
 
 leftBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns("left");
-  myToolbar.styleActiveBtns(["center", "right"], false);
+  myToolbar.toggleBtns(["left"]);
+  myToolbar.removeBtns(["right", "center"]);
   editor.updateBufferStyle({ textAlign: "left" });
   page.focus();
 });
 
 centerBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns("center");
-  myToolbar.styleActiveBtns(["left", "right"], false);
+  myToolbar.toggleBtns(["center"]);
+  myToolbar.removeBtns(["left", "right"]);
   editor.updateBufferStyle({ textAlign: "center" });
   page.focus();
 });
 
 rightBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns("right");
-  myToolbar.styleActiveBtns(["center", "left"], false);
+  myToolbar.toggleBtns(["right"]);
+  myToolbar.removeBtns(["center", "left"]);
   editor.updateBufferStyle({ textAlign: "right" });
   page.focus();
 });
