@@ -52,6 +52,14 @@ class Editor {
     return this.currentTextBuffer.styles;
   }
 
+  updateBufferStyle(styles) {
+    Object.assign(this.currentTextBuffer.DOMNode.style, styles);
+    this.currentTextBuffer.styles = {
+      ...this.currentTextBuffer.style,
+      ...styles,
+    };
+  }
+
   findElem(elem) {
     let foundElem;
     for (let i = 0; i < this.elements.length; i++) {
@@ -131,10 +139,6 @@ class Editor {
       this.setBuffer(this.length - 1);
       this.elements.splice(this.length + 1, 1);
     }
-  }
-
-  updateBufferStyle(styles) {
-    Object.assign(this.currentTextBuffer.DOMNode.style, styles);
   }
 
   clickHandler(e) {

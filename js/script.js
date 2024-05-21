@@ -104,7 +104,8 @@ page.addEventListener("keydown", (e) => {
           break;
         }
       }
-      editor.createNewText(["p"], {});
+      console.log(JSON.stringify(editor.getCurrentStyles()));
+      editor.createNewText(["p"], editor.getCurrentStyles());
       myToolbar.removeBtns(["bold", "italic", "line-through", "underline"]);
       break;
     default:
