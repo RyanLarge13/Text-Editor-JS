@@ -104,9 +104,12 @@ page.addEventListener("keydown", (e) => {
           break;
         }
       }
-      console.log(JSON.stringify(editor.getCurrentStyles()));
-      editor.createNewText(["p"], editor.getCurrentStyles());
-      myToolbar.removeBtns(["bold", "italic", "line-through", "underline"]);
+      if (gapBuffer.print().length < 1) {
+        // editor.createNewText(["br"], {});
+        gapBuffer.insert("\n", gapBuffer.getCurrentPos());
+      } else {
+        editor.createNewText(["p"], editor.getCurrentStyles());
+      }
       break;
     default:
       gapBuffer.insert(e.key, gapBuffer.getCurrentPos());
@@ -156,14 +159,11 @@ h1Btn.addEventListener("click", () => {
 
 boldBtn.addEventListener("click", () => {
   myToolbar.toggleBtns(["bold"]);
-  const currentStyles = editor.getCurrentStyles();
-  const newStyles = { fontWeight: 600 };
-  let stylesToAdd = {};
-  if ("fontWeight" in currentStyles) {
-    delete currentStyles.fontWeight;
-    stylesToAdd = currentStyles;
+  const stylesToAdd = editor.getCurrentStyles();
+  if (stylesToAdd.fontWeight === 600) {
+    stylesToAdd.fontWeight = "normal";
   } else {
-    stylesToAdd = { ...currentStyles, ...newStyles };
+    stylesToAdd.fontWeight = 600;
   }
   editor.nestElem(["span"], stylesToAdd);
   page.focus();
@@ -171,14 +171,11 @@ boldBtn.addEventListener("click", () => {
 
 italicBtn.addEventListener("click", () => {
   myToolbar.toggleBtns(["italic"]);
-  const currentStyles = editor.getCurrentStyles();
-  const newStyles = { fontStyle: "italic" };
-  let stylesToAdd = {};
-  if ("fontStyle" in currentStyles) {
-    delete currentStyles.fontStyle;
-    stylesToAdd = currentStyles;
+  const stylesToAdd = editor.getCurrentStyles();
+  if (stylesToAdd.fontStyle === "italic") {
+    stylesToAdd.fontStyle = "normal";
   } else {
-    stylesToAdd = { ...currentStyles, ...newStyles };
+    stylesToAdd.fontStyle = "italic";
   }
   editor.nestElem(["span"], stylesToAdd);
   page.focus();
@@ -186,15 +183,11 @@ italicBtn.addEventListener("click", () => {
 
 underlineBtn.addEventListener("click", () => {
   myToolbar.toggleBtns(["underline"]);
-  const currentStyles = editor.getCurrentStyles();
-  const newStyles = { textDecoration: "underline" };
-  let stylesToAdd = {};
-  const textDecoration = currentStyles.textDecoration;
-  if (textDecoration && textDecoration === "underline") {
-    delete currentStyles.textDecoration;
-    stylesToAdd = currentStyles;
+  const stylesToAdd = editor.getCurrentStyles();
+  if (stylesToAdd.textDecoration === "underline") {
+    stylesToAdd.textDecoration = "normal";
   } else {
-    stylesToAdd = { ...currentStyles, ...newStyles };
+    stylesToAdd.textDecoration = "underline";
   }
   editor.nestElem(["span"], stylesToAdd);
   page.focus();
@@ -202,21 +195,25 @@ underlineBtn.addEventListener("click", () => {
 
 strikeThroughBtn.addEventListener("click", () => {
   myToolbar.toggleBtns(["line-through"]);
-  const currentStyles = editor.getCurrentStyles();
-  const newStyles = { textDecoration: "line-through" };
-  let stylesToAdd = {};
-  const textDecoration = currentStyles.textDecoration;
-  if (textDecoration && textDecoration === "line-through") {
-    delete currentStyles.textDecoration;
-    stylesToAdd = currentStyles;
+  const stylesToAdd = editor.getCurrentStyles();
+  if (stylesToAdd.textDecoration === "line-through") {
+    stylesToAdd.textDecoration = "normal";
   } else {
-    stylesToAdd = { ...currentStyles, ...newStyles };
+    stylesToAdd.textDecoration = "line-through";
   }
   editor.nestElem(["span"], stylesToAdd);
   page.focus();
 });
 
 leftBtn.addEventListener("click", () => {
+  const btnStates = myToolbar.getBtnStates();
+  if (btnStates.length > 0) {
+    const isActive = btnStates.includes("left");
+    if (isActive) {
+      page.focus();
+      return;
+    }
+  }
   myToolbar.toggleBtns(["left"]);
   myToolbar.removeBtns(["right", "center"]);
   editor.updateBufferStyle({ textAlign: "left" });
@@ -224,6 +221,14 @@ leftBtn.addEventListener("click", () => {
 });
 
 centerBtn.addEventListener("click", () => {
+  const btnStates = myToolbar.getBtnStates();
+  if (btnStates.length > 0) {
+    const isActive = btnStates.includes("center");
+    if (isActive) {
+      page.focus();
+      return;
+    }
+  }
   myToolbar.toggleBtns(["center"]);
   myToolbar.removeBtns(["left", "right"]);
   editor.updateBufferStyle({ textAlign: "center" });
@@ -231,6 +236,14 @@ centerBtn.addEventListener("click", () => {
 });
 
 rightBtn.addEventListener("click", () => {
+  const btnStates = myToolbar.getBtnStates();
+  if (btnStates.length > 0) {
+    const isActive = btnStates.includes("right");
+    if (isActive) {
+      page.focus();
+      return;
+    }
+  }
   myToolbar.toggleBtns(["right"]);
   myToolbar.removeBtns(["center", "left"]);
   editor.updateBufferStyle({ textAlign: "right" });

@@ -83,6 +83,10 @@ class Editor {
       }
     }
     this.page.appendChild(newElem);
+    if (types[0] === "br") {
+      this.createNewText(["p"], styles);
+      return;
+    }
     const newTextBuffer = {
       type: lastElem.tagName.toLowerCase(),
       DOMNode: lastElem,

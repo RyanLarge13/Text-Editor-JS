@@ -58,6 +58,10 @@ class Toolbar {
       }
     });
   }
+
+  getBtnStates() {
+    return this.toggles;
+  }
 }
 
 export default Toolbar;
