@@ -5,6 +5,10 @@
   margin: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: "Poppins", "sans-serif";
   background-color: #eeefff;
@@ -19,8 +23,20 @@ p {
   display: flex;
 }
 
+.dpi-calc {
+  position: absolute;
+  top: "-100%";
+  right: 0;
+  width: 1in;
+  height: 1in;
+}
+
 #tool-bar {
-  background-color: #eeefff;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 10px 20px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  z-index: 999;
+  background-color: #fff;
   padding: 15px;
 }
 
@@ -29,14 +45,14 @@ p {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  gap: 0 5px;
 }
 
 .title {
   background-color: transparent;
   border: none;
   outline: none;
-  font-size: 20px;
-  padding: 8px 0;
+  font-size: 18px;
 }
 
 .toolbar-btn {
@@ -46,7 +62,6 @@ p {
   background-color: #fff;
   border: none;
   outline: none;
-  margin: 0 2.5px;
   cursor: pointer;
   transition: 200ms ease-in-out;
 }
@@ -58,6 +73,8 @@ p {
 }
 
 #text-editor {
+  margin-top: 15px;
+  padding: 1em;
   word-break: break-all;
   word-wrap: break-word;
   background-color: #fff;

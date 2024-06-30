@@ -13,8 +13,9 @@
 
 <body>
   <header class="tool-bar" id="tool-bar">
+    <div aria-hidden="true" class="dpi-calc"></div>
     <div class="doc-and-title">
-      <input class="title" type="text" placeholder="New Document" name="doc-title" , id="doc-title" />
+      <input class="title" type="text" autocomplete="off" placeholder="New Document" name="doc-title" , id="doc-title" />
     </div>
     <div class="toolbar-btn-container" id="toolbar-btn-container">
       <button class="toolbar-btn">
@@ -46,7 +47,7 @@
     </div>
   </header>
   <div class="editor-container">
-    <div id="text-editor" autofocus="true" tabindex="0">
+    <div id="text-editor" autofocus="true" tabindex="-1">
     </div>
   </div>
 </body>
