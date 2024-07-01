@@ -12,7 +12,7 @@ html {
 body {
   font-family: "Poppins", "sans-serif";
   background-color: #eeefff;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 p {
@@ -34,6 +34,8 @@ p {
 #tool-bar {
   position: sticky;
   top: 0;
+  left: 0;
+  right: 0;
   box-shadow: 0 10px 20px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   z-index: 999;
   background-color: #fff;
@@ -74,9 +76,9 @@ p {
 
 #text-editor {
   margin-top: 15px;
-  padding: 1em;
-  word-break: break-all;
-  word-wrap: break-word;
+  padding: 1in;
+  /* word-break: break-all; */
+  /* word-wrap: break-word; */
   background-color: #fff;
   color: #000;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);

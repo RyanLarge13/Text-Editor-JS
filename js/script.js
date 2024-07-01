@@ -25,12 +25,13 @@ const activeBtns = [];
 // Initialization calls
 const initialize = () => {
   dpi = document.querySelector(".dpi-calc").offsetWidth;
-  console.log(dpi);
   const height = dpi * 11;
   const width = dpi * 8.5;
   // page.style.marginTop = `${toolbar.offsetHeight}px`;
   page.style.height = `${height}px`;
   page.style.width = `${width}px`;
+  page.style.minWidth = `${width}px`;
+  page.style.maxWidth = `${width}px`;
 };
 
 const moveArrowUp = (gapBuffer) => {
