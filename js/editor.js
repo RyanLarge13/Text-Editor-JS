@@ -8,7 +8,10 @@ class Editor {
         type: "p",
         DOMNode: this.page.appendChild(document.createElement("p")),
         buffer: new Buffer(),
-        styles: {},
+        styles: {
+          fontSize: "12px",
+          lineHeight: "2em",
+        },
         children: [],
         parent: this.page,
       },
@@ -17,6 +20,10 @@ class Editor {
     this.currentTextBuffer = this.elements[this.length];
     this.clickHandler = this.clickHandler.bind(this);
     this.currentTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
+    Object.assign(this.currentTextBuffer.DOMNode.style, {
+      fontSize: "12px",
+      lineHeight: "2em",
+    });
     this.print(true);
   }
 
@@ -109,7 +116,7 @@ class Editor {
   nestElem(type, styles) {
     this.print(false);
     let currentElem;
-    const newElem = document.createElement(type);
+    const newElem = document.createElement(type[0]);
     const parent = this.currentTextBuffer.parent;
     if (parent === this.page) {
       currentElem = this.currentTextBuffer.DOMNode;

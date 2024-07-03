@@ -4,11 +4,13 @@ import Toolbar from "./toolbar.js";
 let dpi;
 
 const page = document.getElementById("text-editor");
-const toolbar = document.getElementById("tool-bar");
+const toolbar = document.getElementById("toolbar-btn-container");
 const editor = new Editor(page);
 const myToolbar = new Toolbar();
+const fontSizePicker = document.getElementById("font-size");
+const fontFamPicker = document.getElementById("font-fam");
 
-const h1Btn = myToolbar.getBtn("h1");
+// const h1Btn = myToolbar.getBtn("h1");
 const boldBtn = myToolbar.getBtn("b");
 const italicBtn = myToolbar.getBtn("i");
 const underlineBtn = myToolbar.getBtn("u");
@@ -20,6 +22,10 @@ const ulBtn = myToolbar.getBtn("ul");
 const olBtn = myToolbar.getBtn("ol");
 const indentBtn = myToolbar.getBtn("tab-in");
 const outdentBtn = myToolbar.getBtn("tab-out");
+const plusFont = myToolbar.getBtn("plus-font");
+const minusFont = myToolbar.getBtn("minus-font");
+const fontColor = myToolbar.getBtn("font-color");
+const highlight = myToolbar.getBtn("highlight");
 const activeBtns = [];
 
 // Initialization calls
@@ -28,10 +34,13 @@ const initialize = () => {
   const height = dpi * 11;
   const width = dpi * 8.5;
   // page.style.marginTop = `${toolbar.offsetHeight}px`;
-  page.style.height = `${height}px`;
-  page.style.width = `${width}px`;
-  page.style.minWidth = `${width}px`;
-  page.style.maxWidth = `${width}px`;
+  page.style.height = `calc(${height}px - 2in)`;
+  page.style.minHeight = `calc(${height}px - 2in)`;
+  page.style.maxHeight = `calc(${height}px - 2in)`;
+  page.style.width = `calc(${width}px - 2in)`;
+  page.style.minWidth = `calc(${width}px - 2in)`;
+  page.style.maxWidth = `calc(${width}px - 2in)`;
+  page.style.padding = "1in";
 };
 
 const moveArrowUp = (gapBuffer) => {
@@ -71,6 +80,8 @@ page.addEventListener("keydown", (e) => {
         editor.eraseBuff();
       }
       break;
+    case "Control":
+      break;
     case "ArrowLeft":
       gapBuffer.movePosBack(1);
       break;
@@ -84,8 +95,11 @@ page.addEventListener("keydown", (e) => {
       moveArrowDown(gapBuffer);
       break;
     case "Tab":
-      gapBuffer.insert(" ", gapBuffer.getCurrentPos());
-      gapBuffer.insert(" ", gapBuffer.getCurrentPos());
+      gapBuffer.insert(
+        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+        gapBuffer.getCurrentPos()
+      );
+      // gapBuffer.insert("&nbsp;", gapBuffer.getCurrentPos());
       break;
     case "Shift":
       break;
@@ -155,10 +169,26 @@ page.addEventListener("mouseup", (e) => {
   // }
 });
 
-h1Btn.addEventListener("click", () => {
-  editor.createNewText(["h1"]);
+fontSizePicker.addEventListener("change", (e) => {
+  const newSize = e.target.value;
+  const stylesToAdd = editor.getCurrentStyles();
+  stylesToAdd.fontSize = `${Number(newSize)}px`;
+  editor.nestElem(["span"], stylesToAdd);
   page.focus({ preventScroll: true });
 });
+
+fontFamPicker.addEventListener("change", (e) => {
+  const newFont = e.target.value;
+  const stylesToAdd = editor.getCurrentStyles();
+  stylesToAdd.fontFamily = newFont;
+  editor.nestElem(["span"], stylesToAdd);
+  page.focus({ preventScroll: true });
+});
+
+// h1Btn.addEventListener("click", () => {
+//   editor.createNewText(["h1"]);
+//   page.focus({ preventScroll: true });
+// });
 
 boldBtn.addEventListener("click", () => {
   myToolbar.toggleBtns(["bold"]);
@@ -256,6 +286,45 @@ rightBtn.addEventListener("click", () => {
 ulBtn.addEventListener("click", () => {
   editor.createNewText(["ul", "li"], editor.getCurrentStyles());
   page.focus({ preventScroll: true });
+});
+
+indentBtn.addEventListener("click", (e) => {
+  editor.updateBufferStyle({ textIndent: "2em" });
+  page.focus({ preventScroll: true });
+});
+
+outdentBtn.addEventListener("click", (e) => {
+  editor.updateBufferStyle({ textIndent: 0 });
+  page.focus({ preventScroll: true });
+});
+
+plusFont.addEventListener("click", (e) => {
+  const currentIndex = fontSizePicker.selectedIndex;
+  const newIndex = (currentIndex + 1) % fontSizePicker.options.length;
+  fontSizePicker.selectedIndex = newIndex;
+  const value = fontSizePicker.options[newIndex].value;
+  editor.updateBufferStyle({ fontSize: `${value}px` });
+});
+
+minusFont.addEventListener("click", (e) => {
+  const currentIndex = fontSizePicker.selectedIndex;
+  const newIndex = (currentIndex - 1) % fontSizePicker.options.length;
+  fontSizePicker.selectedIndex = newIndex;
+  const value = fontSizePicker.options[newIndex].value;
+  editor.updateBufferStyle({ fontSize: `${value}px` });
+});
+
+fontColor.addEventListener("click", (e) => {
+  fontColor.setAttribute("disabled", true);
+  const rect = fontColor.getBoundingClientRect();
+  const left = rect.left;
+  const top = rect.top;
+  const newColorSelect = document.createElement("div");
+  newColorSelect.innerText = "What the fuck!";
+  newColorSelect.classList.add("option-select");
+  newColorSelect.style.top = `${top + rect.height}px`;
+  newColorSelect.style.left = `${left}px`;
+  toolbar.appendChild(newColorSelect);
 });
 
 window.addEventListener("DOMContentLoaded", initialize);

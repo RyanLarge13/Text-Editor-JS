@@ -10,13 +10,34 @@ html {
 }
 
 body {
-  font-family: "Poppins", "sans-serif";
-  background-color: #eeefff;
-  font-size: 12px;
+  /* font-family: "Poppins", "sans-serif"; */
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgb(238, 239, 255);
 }
 
 p {
   white-space: pre-line;
+}
+
+select {
+  padding: 2px;
+  border-radius: 3px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  font-family: "Poppins", "sans-serif";
+  transition: ease-in-out 200ms;
+  /* appearance: none; */
+}
+
+option {
+  border: none;
+  outline: none;
+}
+
+select:hover {
+  background-color: rgb(218, 219, 255);
 }
 
 .doc-and-title {
@@ -43,11 +64,51 @@ p {
 }
 
 .toolbar-btn-container {
+  position: relative;
   margin-top: 10px;
+  padding: 0.5em 1em;
+  border-radius: 50px;
+  background-color: rgb(238, 239, 255);
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 0 5px;
+}
+
+#font-color {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#highlight {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#font-color-color {
+  width: 80%;
+  height: 5px;
+  border-radius: 3px;
+  background-color: #000;
+}
+
+#highlight-color-color {
+  width: 80%;
+  height: 5px;
+  border-radius: 3px;
+  background-color: transparent;
+}
+
+.option-select {
+  position: fixed;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  background-color: #fff;
+  padding: 1em;
 }
 
 .title {
@@ -61,11 +122,16 @@ p {
   width: 25px;
   height: 25px;
   border-radius: 3px;
-  background-color: #fff;
+  background-color: transparent;
   border: none;
   outline: none;
   cursor: pointer;
   transition: 200ms ease-in-out;
+  transition: ease-in-out 200ms;
+}
+
+.toolbar-btn:hover {
+  background-color: rgb(218, 219, 255);
 }
 
 .editor-container {
@@ -76,8 +142,8 @@ p {
 
 #text-editor {
   margin-top: 15px;
-  padding: 1in;
-  /* word-break: break-all; */
+  /* padding: 1in; */
+  word-break: break-all;
   /* word-wrap: break-word; */
   background-color: #fff;
   color: #000;
@@ -105,8 +171,8 @@ p {
 }
 
 .active-btn {
-  background-color: #444;
-  color: #fff;
+  background-color: rgb(209, 209, 255);
+  /* color: #fff; */
 }
 
 .hidden {
