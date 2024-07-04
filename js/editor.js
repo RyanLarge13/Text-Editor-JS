@@ -164,7 +164,14 @@ class Editor {
 
   nestSpan(styles) {
     this.print(false);
-    const parent = this.currentTextBuffer.DOMNode;
+    let parent = this.currentTextBuffer.DOMNode;
+    if (parent.tagname.toLowerCase() == "span") {
+      parent = this.currentTextBuffer.parent;
+    }
+    if (parent === this.page) {
+      this.createNewText("p", this.getCurrentStyles());
+      return;
+    }
     const newElem = document.createElement("span");
     parent.appendChild(newElem);
     const newTextBuffer = {

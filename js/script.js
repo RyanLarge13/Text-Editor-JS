@@ -71,6 +71,18 @@ const moveArrowDown = (gapBuffer) => {
   }
 };
 
+const generateNewStyles = (type) => {
+  if (type === p) {
+    if (headings.value !== "normal") {
+      const currentStyles = editor.getCurrentStyles();
+      headings.value = "normal";
+      fontSize.value = "12px";
+      currentStyles.fontSize = "12px";
+      return currentStyles;
+    }
+  }
+};
+
 page.addEventListener("keydown", (e) => {
   e.preventDefault();
   const key = e.key;
@@ -124,6 +136,13 @@ page.addEventListener("keydown", (e) => {
         // possibly create a new buffer here instead to optimize current editing. Needs to
         // be a balance between not having too many gap buffers and not letting gap
         // buffers get too large
+        const gapBuffLen = gapBuffer.print().length;
+        if (gapBuffLen < 1) {
+          // Create a style reset based on the element type you want to create
+          const newStyles = generateNewStyles("p");
+          editor.createNewText("p", newStyles);
+          gapBuffer.insert("\n", gapBuffer.getCurrentPos());
+        }
         gapBuffer.insert("\n", gapBuffer.getCurrentPos());
       }
       break;
