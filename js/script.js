@@ -1,3 +1,4 @@
+import colors from "../constants/colors.js";
 import Editor from "./editor.js";
 import Toolbar from "./toolbar.js";
 
@@ -315,15 +316,59 @@ minusFont.addEventListener("click", (e) => {
 });
 
 fontColor.addEventListener("click", (e) => {
+  const fontIconColor = document.getElementById("font-color-color");
   fontColor.setAttribute("disabled", true);
   const rect = fontColor.getBoundingClientRect();
   const left = rect.left;
   const top = rect.top;
   const newColorSelect = document.createElement("div");
-  newColorSelect.innerText = "What the fuck!";
   newColorSelect.classList.add("option-select");
   newColorSelect.style.top = `${top + rect.height}px`;
   newColorSelect.style.left = `${left}px`;
+  colors.forEach((color) => {
+    const newColor = document.createElement("div");
+    newColor.classList.add("color");
+    newColor.style.backgroundColor = color;
+    newColor.addEventListener("click", () => {
+      const currentStyles = editor.getCurrentStyles();
+      currentStyles.color = color;
+      fontIconColor.style.backgroundColor = color;
+      fontColor.setAttribute("disabled", false);
+      editor.nestElem(["span"], currentStyles);
+      toolbar.removeChild(newColorSelect);
+      page.focus({ preventScroll: true });
+    });
+    newColorSelect.appendChild(newColor);
+  });
+  toolbar.appendChild(newColorSelect);
+});
+
+highlight.addEventListener("click", (e) => {
+  const highlightColor = document.getElementById("highlight-color-color");
+  highlight.setAttribute("disabled", true);
+  const rect = highlight.getBoundingClientRect();
+  const left = rect.left;
+  const top = rect.top;
+  const newColorSelect = document.createElement("div");
+  newColorSelect.classList.add("option-select");
+  newColorSelect.style.top = `${top + rect.height}px`;
+  newColorSelect.style.left = `${left}px`;
+  console.log(newColorSelect);
+  colors.forEach((color) => {
+    const newColor = document.createElement("div");
+    newColor.classList.add("color");
+    newColor.style.backgroundColor = color;
+    newColor.addEventListener("click", () => {
+      const currentStyles = editor.getCurrentStyles();
+      currentStyles.backgroundColor = color;
+      highlightColor.style.backgroundColor = color;
+      highlight.setAttribute("disabled", false);
+      editor.nestElem(["span"], currentStyles);
+      toolbar.removeChild(newColorSelect);
+      page.focus({ preventScroll: true });
+    });
+    newColorSelect.appendChild(newColor);
+  });
   toolbar.appendChild(newColorSelect);
 });
 
