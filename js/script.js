@@ -10,8 +10,8 @@ const editor = new Editor(page);
 const myToolbar = new Toolbar();
 const fontSizePicker = document.getElementById("font-size");
 const fontFamPicker = document.getElementById("font-fam");
+const headings = document.getElementById("headings");
 
-// const h1Btn = myToolbar.getBtn("h1");
 const boldBtn = myToolbar.getBtn("b");
 const italicBtn = myToolbar.getBtn("i");
 const underlineBtn = myToolbar.getBtn("u");
@@ -21,6 +21,7 @@ const centerBtn = myToolbar.getBtn("center");
 const rightBtn = myToolbar.getBtn("right");
 const ulBtn = myToolbar.getBtn("ul");
 const olBtn = myToolbar.getBtn("ol");
+const checkListBtn = myToolbar.getBtn("check-list");
 const indentBtn = myToolbar.getBtn("tab-in");
 const outdentBtn = myToolbar.getBtn("tab-out");
 const plusFont = myToolbar.getBtn("plus-font");
@@ -100,31 +101,34 @@ page.addEventListener("keydown", (e) => {
         "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
         gapBuffer.getCurrentPos()
       );
-      // gapBuffer.insert("&nbsp;", gapBuffer.getCurrentPos());
       break;
     case "Shift":
       break;
+    case "Alt":
+      break;
     case "Enter":
-      const type = editor.getElemType();
-      if (type === "li") {
-        const gapBuffLen = gapBuffer.print().length;
-        if (gapBuffLen > 0) {
-          editor.createNewText(["li"]);
-          break;
-        } else {
-          editor.eraseBuff();
-          editor.createNewText(["p"]);
-          break;
+      {
+        const type = editor.getElemType();
+        const parentType = editor.getParentType();
+        if (parentType === "ul" || parentType === "ol") {
+          const gapBuffLen = gapBuffer.print().length;
+          if (gapBuffLen > 0) {
+            editor.nestListElem(type, editor.getCurrentStyles());
+            break;
+          } else {
+            editor.eraseLastList();
+            editor.createNewText("p", editor.getCurrentStyles());
+            break;
+          }
         }
-      }
-      if (gapBuffer.print().length < 1) {
-        // editor.createNewText(["br"], {});
+        // possibly create a new buffer here instead to optimize current editing. Needs to
+        // be a balance between not having too many gap buffers and not letting gap
+        // buffers get too large
         gapBuffer.insert("\n", gapBuffer.getCurrentPos());
-      } else {
-        editor.createNewText(["p"], editor.getCurrentStyles());
       }
       break;
     default:
+      // possibly check for buffer length here and create a new one when the buffer reaches a certain size
       gapBuffer.insert(e.key, gapBuffer.getCurrentPos());
       break;
   }
@@ -174,7 +178,7 @@ fontSizePicker.addEventListener("change", (e) => {
   const newSize = e.target.value;
   const stylesToAdd = editor.getCurrentStyles();
   stylesToAdd.fontSize = `${Number(newSize)}px`;
-  editor.nestElem(["span"], stylesToAdd);
+  editor.nestSpan(stylesToAdd);
   page.focus({ preventScroll: true });
 });
 
@@ -182,14 +186,59 @@ fontFamPicker.addEventListener("change", (e) => {
   const newFont = e.target.value;
   const stylesToAdd = editor.getCurrentStyles();
   stylesToAdd.fontFamily = newFont;
-  editor.nestElem(["span"], stylesToAdd);
+  editor.nestSpan(stylesToAdd);
   page.focus({ preventScroll: true });
 });
 
-// h1Btn.addEventListener("click", () => {
-//   editor.createNewText(["h1"]);
-//   page.focus({ preventScroll: true });
-// });
+headings.addEventListener("change", (e) => {
+  const type = e.target.value;
+  switch (type) {
+    case "small":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `8px`;
+        fontSizePicker.value = `8`;
+        editor.updateBufferStyle(currentStyles);
+      }
+      break;
+    case "normal":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `12px`;
+        fontSizePicker.value = `12`;
+        editor.updateBufferStyle(currentStyles);
+      }
+      break;
+    case "large":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `18px`;
+        fontSizePicker.value = `18`;
+        editor.updateBufferStyle(currentStyles);
+      }
+      break;
+    case "title":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `26px`;
+        fontSizePicker.value = `26`;
+        editor.updateBufferStyle(currentStyles);
+      }
+      break;
+    case "subtitle":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `22px`;
+        fontSizePicker.value = `22`;
+        editor.updateBufferStyle(currentStyles);
+      }
+      break;
+    default:
+      editor.createNewText([type], {});
+      break;
+  }
+  page.focus({ preventScroll: true });
+});
 
 boldBtn.addEventListener("click", () => {
   myToolbar.toggleBtns(["bold"]);
@@ -199,7 +248,7 @@ boldBtn.addEventListener("click", () => {
   } else {
     stylesToAdd.fontWeight = 600;
   }
-  editor.nestElem(["span"], stylesToAdd);
+  editor.nestSpan(stylesToAdd);
   page.focus({ preventScroll: true });
 });
 
@@ -211,7 +260,7 @@ italicBtn.addEventListener("click", () => {
   } else {
     stylesToAdd.fontStyle = "italic";
   }
-  editor.nestElem(["span"], stylesToAdd);
+  editor.nestSpan(stylesToAdd);
   page.focus({ preventScroll: true });
 });
 
@@ -223,7 +272,7 @@ underlineBtn.addEventListener("click", () => {
   } else {
     stylesToAdd.textDecoration = "underline";
   }
-  editor.nestElem(["span"], stylesToAdd);
+  editor.nestSpan(stylesToAdd);
   page.focus({ preventScroll: true });
 });
 
@@ -235,7 +284,7 @@ strikeThroughBtn.addEventListener("click", () => {
   } else {
     stylesToAdd.textDecoration = "line-through";
   }
-  editor.nestElem(["span"], stylesToAdd);
+  editor.nestSpan(stylesToAdd);
   page.focus({ preventScroll: true });
 });
 
@@ -285,7 +334,17 @@ rightBtn.addEventListener("click", () => {
 });
 
 ulBtn.addEventListener("click", () => {
-  editor.createNewText(["ul", "li"], editor.getCurrentStyles());
+  editor.createList("ul", "p", editor.getCurrentStyles());
+  page.focus({ preventScroll: true });
+});
+
+olBtn.addEventListener("click", () => {
+  editor.createList("ol", "li", editor.getCurrentStyles());
+  page.focus({ preventScroll: true });
+});
+
+checkListBtn.addEventListener("click", () => {
+  editor.createList("ul", "input", editor.getCurrentStyles());
   page.focus({ preventScroll: true });
 });
 
@@ -333,8 +392,9 @@ fontColor.addEventListener("click", (e) => {
       const currentStyles = editor.getCurrentStyles();
       currentStyles.color = color;
       fontIconColor.style.backgroundColor = color;
-      fontColor.setAttribute("disabled", false);
-      editor.nestElem(["span"], currentStyles);
+      fontColor.removeAttribute("disabled");
+      // handle logic if we are currently in a list
+      editor.nestSpan(currentStyles);
       toolbar.removeChild(newColorSelect);
       page.focus({ preventScroll: true });
     });
@@ -362,8 +422,9 @@ highlight.addEventListener("click", (e) => {
       const currentStyles = editor.getCurrentStyles();
       currentStyles.backgroundColor = color;
       highlightColor.style.backgroundColor = color;
-      highlight.setAttribute("disabled", false);
-      editor.nestElem(["span"], currentStyles);
+      highlight.removeAttribute("disabled");
+      // handle style updates if we are currently in a list
+      editor.nestSpan(currentStyles);
       toolbar.removeChild(newColorSelect);
       page.focus({ preventScroll: true });
     });

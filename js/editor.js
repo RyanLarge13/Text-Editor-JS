@@ -51,8 +51,13 @@ class Editor {
   }
 
   getElemType() {
-    const element = this.currentTextBuffer.DOMNode.tagName.toLowerCase();
-    return element;
+    const type = this.currentTextBuffer.DOMNode.tagName.toLowerCase();
+    return type;
+  }
+
+  getParentType() {
+    const type = this.currentTextBuffer.parent.tagName.toLowerCase();
+    return type;
   }
 
   getCurrentStyles() {
@@ -78,34 +83,30 @@ class Editor {
     return foundElem;
   }
 
-  createNewText(types, styles) {
-    const newElem = document.createElement(types[0]);
-    let lastElem = newElem;
-    for (let i = 0; i < types.length; i++) {
-      const nextElemExists = types[i + 1];
-      if (nextElemExists) {
-        const nextElem = document.createElement(nextElemExists);
-        newElem.appendChild(nextElem);
-        lastElem = nextElem;
-      }
+  createSpan() {}
+
+  createList(type, inputType, styles) {
+    const newList = document.createElement(type);
+    const newLi = document.createElement("li");
+    const input = document.createElement(inputType);
+    newLi.appendChild(input);
+    newList.appendChild(newLi);
+    if (inputType === "input") {
+      input.type = "checkbox";
     }
-    this.page.appendChild(newElem);
-    if (types[0] === "br") {
-      this.createNewText(["p"], styles);
-      return;
-    }
+    this.page.appendChild(newList);
     const newTextBuffer = {
-      type: lastElem.tagName.toLowerCase(),
-      DOMNode: lastElem,
+      type: inputType,
+      DOMNode: input,
       buffer: new Buffer(),
       styles: styles,
       children: [],
-      parent: this.page,
+      parent: newList,
     };
     if (styles) {
-      Object.assign(newTextBuffer.DOMNode.style, styles);
+      Object.assign(input.style, styles);
     }
-    newTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
+    input.addEventListener("click", this.clickHandler);
     this.print(false);
     this.elements.push(newTextBuffer);
     this.length += 1;
@@ -113,33 +114,73 @@ class Editor {
     this.print(true);
   }
 
-  nestElem(type, styles) {
+  createNewText(type, styles) {
     this.print(false);
-    let currentElem;
-    const newElem = document.createElement(type[0]);
-    const parent = this.currentTextBuffer.parent;
-    if (parent === this.page) {
-      currentElem = this.currentTextBuffer.DOMNode;
-    } else {
-      currentElem = this.currentTextBuffer.parent;
-    }
-    currentElem.appendChild(newElem);
-    const elemRef = this.findElem(currentElem);
-    elemRef.children.push(newElem);
+    const newElem = document.createElement(type);
+    this.page.appendChild(newElem);
     const newTextBuffer = {
       type: type,
       DOMNode: newElem,
       buffer: new Buffer(),
       styles: styles,
       children: [],
-      parent: currentElem,
+      parent: this.page,
     };
     if (styles) {
-      Object.assign(newTextBuffer.DOMNode.style, styles);
+      Object.assign(newElem.style, styles);
+    }
+    newElem.addEventListener("click", this.clickHandler);
+    this.print(false);
+    this.elements.push(newTextBuffer);
+    this.length += 1;
+    this.currentTextBuffer = newTextBuffer;
+    this.print(true);
+  }
+
+  nestListElem(type, styles) {
+    this.print(false);
+    const parent = this.currentTextBuffer.parent;
+    const newLi = document.createElement("li");
+    const newElem = document.createElement(type);
+    newLi.appendChild(newElem);
+    parent.appendChild(newLi);
+    const newTextBuffer = {
+      type: type,
+      DOMNode: newElem,
+      buffer: new Buffer(),
+      styles: styles,
+      children: [],
+      parent: parent,
+    };
+    if (styles) {
+      Object.assign(newElem.style, styles);
     }
     this.elements.push(newTextBuffer);
     this.length += 1;
-    this.currentTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
+    newElem.addEventListener("click", this.clickHandler);
+    this.currentTextBuffer = newTextBuffer;
+    this.print(true);
+  }
+
+  nestSpan(styles) {
+    this.print(false);
+    const parent = this.currentTextBuffer.DOMNode;
+    const newElem = document.createElement("span");
+    parent.appendChild(newElem);
+    const newTextBuffer = {
+      type: "span",
+      DOMNode: newElem,
+      buffer: new Buffer(),
+      styles: styles,
+      children: [],
+      parent: parent,
+    };
+    if (styles) {
+      Object.assign(newElem.style, styles);
+    }
+    this.elements.push(newTextBuffer);
+    this.length += 1;
+    newElem.addEventListener("click", this.clickHandler);
     this.currentTextBuffer = newTextBuffer;
     this.print(true);
   }
@@ -150,6 +191,13 @@ class Editor {
       this.setBuffer(this.length - 1);
       this.elements.splice(this.length + 1, 1);
     }
+  }
+
+  eraseLastList() {
+    const parent = this.currentTextBuffer.parent;
+    parent.removeChild(parent.lastChild);
+    // this.setBuffer(this.length - 1);
+    this.elements.splice(this.length + 1, 1);
   }
 
   clickHandler(e) {
