@@ -3,6 +3,8 @@ import Editor from "./editor.js";
 import Toolbar from "./toolbar.js";
 
 let dpi;
+let indent = 0;
+let lastIndent = true;
 
 const page = document.getElementById("text-editor");
 const toolbar = document.getElementById("toolbar-btn-container");
@@ -11,6 +13,9 @@ const myToolbar = new Toolbar();
 const fontSizePicker = document.getElementById("font-size");
 const fontFamPicker = document.getElementById("font-fam");
 const headings = document.getElementById("headings");
+const navBtns = document.querySelectorAll("nav li p");
+const topMeasure = document.getElementById("top-measure");
+const sideMeasure = document.getElementById("side-measure");
 
 const boldBtn = myToolbar.getBtn("b");
 const italicBtn = myToolbar.getBtn("i");
@@ -43,6 +48,21 @@ const initialize = () => {
   page.style.minWidth = `calc(${width}px - 2in)`;
   page.style.maxWidth = `calc(${width}px - 2in)`;
   page.style.padding = "1in";
+  createMeasurements(dpi, height, width);
+};
+
+const createMeasurements = (dpi, height, width) => {
+  topMeasure.style.width = `${width}px`;
+  sideMeasure.style.height = `${height}px`;
+  const inchesTop = 8;
+  for (let i = 1; i <= inchesTop; i++) {
+    const newDiv = document.createElement("div");
+    newDiv.style.outline = "1px solid #777";
+    newDiv.style.width = "0px";
+    newDiv.style.height = "15px";
+    newDiv.style.marginLeft = `${width / 8.5}px`;
+    topMeasure.appendChild(newDiv);
+  }
 };
 
 const moveArrowUp = (gapBuffer) => {
@@ -72,15 +92,64 @@ const moveArrowDown = (gapBuffer) => {
 };
 
 const generateNewStyles = (type) => {
-  if (type === p) {
+  const currentStyles = editor.getCurrentStyles();
+  if (type === "p") {
     if (headings.value !== "normal") {
-      const currentStyles = editor.getCurrentStyles();
       headings.value = "normal";
-      fontSize.value = "12px";
+      fontSizePicker.value = "12";
       currentStyles.fontSize = "12px";
       return currentStyles;
     }
   }
+};
+
+const handleEnter = (type, parentType, gapBuffer) => {
+  if (parentType !== "ul" || parentType != "ol") {
+    switch (type) {
+      case "h1":
+        editor.createNewText("p", generateNewStyles("p"));
+        return;
+      case "h2":
+        editor.createNewText("p", generateNewStyles("p"));
+        return;
+      case "h3":
+        editor.createNewText("p", generateNewStyles("p"));
+        return;
+      case "h4":
+        editor.createNewText("p", generateNewStyles("p"));
+        return;
+      case "h5":
+        editor.createNewText("p", generateNewStyles("p"));
+        return;
+      case "h6":
+        editor.createNewText("p", generateNewStyles("p"));
+        return;
+      default:
+        break;
+    }
+  }
+  if (parentType === "ul" || parentType === "ol") {
+    const gapBuffLen = gapBuffer.print().length;
+    if (gapBuffLen > 0) {
+      editor.nestListElem(type, editor.getCurrentStyles());
+      return;
+    } else {
+      editor.eraseLastList();
+      editor.createNewText("p", editor.getCurrentStyles());
+      return;
+    }
+  }
+  // possibly create a new buffer here instead to optimize current editing. Needs to
+  // be a balance between not having too many gap buffers and not letting gap
+  // buffers get too large
+  const gapBuffLen = gapBuffer.print().length;
+  if (gapBuffLen < 1) {
+    // Create a style reset based on the element type you want to create
+    const newStyles = generateNewStyles("p");
+    editor.createNewText("p", newStyles);
+    gapBuffer.insert("\n", gapBuffer.getCurrentPos());
+  }
+  gapBuffer.insert("\n", gapBuffer.getCurrentPos());
 };
 
 page.addEventListener("keydown", (e) => {
@@ -122,28 +191,7 @@ page.addEventListener("keydown", (e) => {
       {
         const type = editor.getElemType();
         const parentType = editor.getParentType();
-        if (parentType === "ul" || parentType === "ol") {
-          const gapBuffLen = gapBuffer.print().length;
-          if (gapBuffLen > 0) {
-            editor.nestListElem(type, editor.getCurrentStyles());
-            break;
-          } else {
-            editor.eraseLastList();
-            editor.createNewText("p", editor.getCurrentStyles());
-            break;
-          }
-        }
-        // possibly create a new buffer here instead to optimize current editing. Needs to
-        // be a balance between not having too many gap buffers and not letting gap
-        // buffers get too large
-        const gapBuffLen = gapBuffer.print().length;
-        if (gapBuffLen < 1) {
-          // Create a style reset based on the element type you want to create
-          const newStyles = generateNewStyles("p");
-          editor.createNewText("p", newStyles);
-          gapBuffer.insert("\n", gapBuffer.getCurrentPos());
-        }
-        gapBuffer.insert("\n", gapBuffer.getCurrentPos());
+        handleEnter(type, parentType, gapBuffer);
       }
       break;
     default:
@@ -252,6 +300,54 @@ headings.addEventListener("change", (e) => {
         editor.updateBufferStyle(currentStyles);
       }
       break;
+    case "h1":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `32px`;
+        fontSizePicker.value = `32`;
+        editor.createNewText("h1", currentStyles);
+      }
+      break;
+    case "h2":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `24px`;
+        fontSizePicker.value = `24`;
+        editor.createNewText("h2", currentStyles);
+      }
+      break;
+    case "h3":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `20px`;
+        fontSizePicker.value = `20`;
+        editor.createNewText("h3", currentStyles);
+      }
+      break;
+    case "h4":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `16px`;
+        fontSizePicker.value = `16`;
+        editor.createNewText("h4", currentStyles);
+      }
+      break;
+    case "h5":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `14px`;
+        fontSizePicker.value = `14`;
+        editor.createNewText("h5", currentStyles);
+      }
+      break;
+    case "h6":
+      {
+        const currentStyles = editor.getCurrentStyles();
+        currentStyles.fontSize = `10px`;
+        fontSizePicker.value = `10`;
+        editor.createNewText("h6", currentStyles);
+      }
+      break;
     default:
       editor.createNewText([type], {});
       break;
@@ -358,7 +454,7 @@ ulBtn.addEventListener("click", () => {
 });
 
 olBtn.addEventListener("click", () => {
-  editor.createList("ol", "li", editor.getCurrentStyles());
+  editor.createList("ol", "p", editor.getCurrentStyles());
   page.focus({ preventScroll: true });
 });
 
@@ -368,13 +464,23 @@ checkListBtn.addEventListener("click", () => {
 });
 
 indentBtn.addEventListener("click", (e) => {
-  editor.updateBufferStyle({ textIndent: "2em" });
+  editor.updateBufferStyle({ textIndent: `${indent + 1 * 2}em` });
   page.focus({ preventScroll: true });
+  indent++;
+  lastIndent = true;
 });
 
 outdentBtn.addEventListener("click", (e) => {
-  editor.updateBufferStyle({ textIndent: 0 });
+  if (lastIndent === true) {
+    indent -= 2;
+    lastIndent = false;
+  }
+  editor.updateBufferStyle({ textIndent: `${indent * 2}em` });
   page.focus({ preventScroll: true });
+  if (indent === 0) {
+    return;
+  }
+  indent--;
 });
 
 plusFont.addEventListener("click", (e) => {
@@ -450,6 +556,29 @@ highlight.addEventListener("click", (e) => {
     newColorSelect.appendChild(newColor);
   });
   toolbar.appendChild(newColorSelect);
+});
+
+navBtns.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    const btnText = e.target.innerText;
+    const rect = e.target.getBoundingClientRect();
+    switch (btnText) {
+      case "File":
+        break;
+      case "Edit":
+        break;
+      case "View":
+        break;
+      case "Insert":
+        break;
+      case "Format":
+        break;
+      case "Tools":
+        break;
+      case "help":
+        break;
+    }
+  });
 });
 
 window.addEventListener("DOMContentLoaded", initialize);
