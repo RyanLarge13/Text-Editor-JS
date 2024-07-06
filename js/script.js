@@ -48,20 +48,61 @@ const initialize = () => {
   page.style.minWidth = `calc(${width}px - 2in)`;
   page.style.maxWidth = `calc(${width}px - 2in)`;
   page.style.padding = "1in";
-  createMeasurements(dpi, height, width);
+  createMeasurements(height, width);
 };
 
-const createMeasurements = (dpi, height, width) => {
+const createMeasurements = (height, width) => {
   topMeasure.style.width = `${width}px`;
   sideMeasure.style.height = `${height}px`;
   const inchesTop = 8;
-  for (let i = 1; i <= inchesTop; i++) {
+  const inchesSide = 11;
+  for (let i = 1; i <= inchesTop * 4 + 1; i++) {
+    const modulo = i % 4;
     const newDiv = document.createElement("div");
-    newDiv.style.outline = "1px solid #777";
-    newDiv.style.width = "0px";
-    newDiv.style.height = "15px";
-    newDiv.style.marginLeft = `${width / 8.5}px`;
+    newDiv.classList.add("measure-line-top");
+    newDiv.innerHTML = modulo === 0 ? `<p>${i / 4}</p>` : null;
+    newDiv.style.borderLeft =
+      modulo === 0
+        ? "3px solid black"
+        : modulo === 2
+        ? "2px solid black"
+        : modulo === 3
+        ? "1px solid black"
+        : "1px solid black";
+    newDiv.style.height =
+      modulo === 0
+        ? "15px"
+        : modulo === 2
+        ? "10px"
+        : modulo === 3
+        ? "5px"
+        : "5px";
+    newDiv.style.left = `${((width / 8.5) * i) / 4}px`;
     topMeasure.appendChild(newDiv);
+  }
+  for (let i = 1; i <= inchesSide * 4 - 1; i++) {
+    const modulo = i % 4;
+    const newDiv = document.createElement("div");
+    newDiv.classList.add("measure-line-left");
+    newDiv.innerHTML = modulo === 0 ? `<p>${i / 4}</p>` : null;
+    newDiv.style.borderTop =
+      modulo === 0
+        ? "3px solid black"
+        : modulo === 2
+        ? "2px solid black"
+        : modulo === 3
+        ? "1px solid black"
+        : "1px solid black";
+    newDiv.style.width =
+      modulo === 0
+        ? "15px"
+        : modulo === 2
+        ? "10px"
+        : modulo === 3
+        ? "5px"
+        : "5px";
+    newDiv.style.top = `${((height / 11) * i) / 4}px`;
+    sideMeasure.appendChild(newDiv);
   }
 };
 

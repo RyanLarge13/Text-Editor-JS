@@ -12,8 +12,12 @@
 </head>
 
 <body>
-  <div class="top-measure" id="top-measure"></div>
-  <div class="side-measure" id="side-measure"></div>
+  <div class="top-measure-container">
+    <div class="top-measure" id="top-measure"></div>
+  </div>
+  <div class="side-measure-container">
+    <div class="side-measure" id="side-measure"></div>
+  </div>
   <header class="tool-bar" id="tool-bar">
     <div aria-hidden="true" class="dpi-calc"></div>
     <div class="logo-title-nav-container">
@@ -133,6 +137,12 @@
       <button class="toolbar-btn" id="tab-in"><i class="fa-solid fa-indent"></i></button>
       <button class="toolbar-btn" id="tab-out"><i class="fa-solid fa-outdent"></i></button>
       <button class="toolbar-btn" id="line-height"><i class="fa-solid fa-grip-lines"></i></button>
+      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+      <button class="toolbar-btn" id="quote-btn"><i class="fa-solid fa-quote-left"></i></button>
+      <button class="toolbar-btn" id="code-btn"><i class="fa-solid fa-code"></i></button>
+      <button class="toolbar-btn" id="image-btn"><i class="fa-solid fa-image"></i></button>
+      <button class="toolbar-btn" id="video-btn"><i class="fa-solid fa-video"></i></button>
+      <button class="toolbar-btn" id="link-btn"><i class="fa-solid fa-link"></i></button>
     </div>
   </header>
   <div class="editor-container" id="editor-container">
