@@ -16,6 +16,8 @@ const headings = document.getElementById("headings");
 const navBtns = document.querySelectorAll("nav li p");
 const topMeasure = document.getElementById("top-measure");
 const sideMeasure = document.getElementById("side-measure");
+const handleLeftTop = document.getElementById("handle-left-top");
+const handleRightTop = document.getElementById("handle-right-top");
 
 const boldBtn = myToolbar.getBtn("b");
 const italicBtn = myToolbar.getBtn("i");
@@ -33,6 +35,12 @@ const plusFont = myToolbar.getBtn("plus-font");
 const minusFont = myToolbar.getBtn("minus-font");
 const fontColor = myToolbar.getBtn("font-color");
 const highlight = myToolbar.getBtn("highlight");
+const imgBtn = myToolbar.getBtn("image-btn");
+const imageInput = document.getElementById("image-input");
+const videoBtn = myToolbar.getBtn("video-btn");
+const quoteBtn = myToolbar.getBtn("quote-btn");
+const codeBtn = myToolbar.getBtn("code-btn");
+const linkBtn = myToolbar.getBtn("link-btn");
 const activeBtns = [];
 
 // Initialization calls
@@ -40,6 +48,7 @@ const initialize = () => {
   dpi = document.querySelector(".dpi-calc").offsetWidth;
   const height = dpi * 11;
   const width = dpi * 8.5;
+  const rect = page.getBoundingClientRect();
   // page.style.marginTop = `${toolbar.offsetHeight}px`;
   page.style.height = `calc(${height}px - 2in)`;
   page.style.minHeight = `calc(${height}px - 2in)`;
@@ -49,6 +58,7 @@ const initialize = () => {
   page.style.maxWidth = `calc(${width}px - 2in)`;
   page.style.padding = "1in";
   createMeasurements(height, width);
+  placeHandles();
 };
 
 const createMeasurements = (height, width) => {
@@ -104,6 +114,13 @@ const createMeasurements = (height, width) => {
     newDiv.style.top = `${((height / 11) * i) / 4}px`;
     sideMeasure.appendChild(newDiv);
   }
+};
+
+const placeHandles = () => {
+  const pageLeft = page.getBoundingClientRect().left;
+  const pageRight = page.getBoundingClientRect().right;
+  handleLeftTop.style.left = `calc(${pageLeft}px + 1in)`;
+  handleRightTop.style.left = `calc(${pageRight}px - 1in)`;
 };
 
 const moveArrowUp = (gapBuffer) => {
@@ -597,6 +614,28 @@ highlight.addEventListener("click", (e) => {
     newColorSelect.appendChild(newColor);
   });
   toolbar.appendChild(newColorSelect);
+});
+
+imgBtn.addEventListener("click", () => {
+  imageInput.click();
+});
+
+imageInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.createElement("img");
+      img.classList.add("image-defaults");
+      img.src = e.target.result;
+      img.alt = file.name;
+      page.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+    console.log("Image received");
+  } else {
+    console.log("No image received");
+  }
 });
 
 navBtns.forEach((btn) => {

@@ -15,6 +15,18 @@ body {
   background-color: rgb(238, 239, 255);
 }
 
+body::-webkit-scrollbar {
+  width: 5px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: rgb(238, 239, 255);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #999;
+}
+
 .top-measure-container {
   position: fixed;
   top: 122px;
@@ -41,15 +53,14 @@ body {
 
 .side-measure-container {
   background-color: #fff;
-  box-shadow: 15px 0 20px -5px rgb(0 0 0 / 0.1),
+  box-shadow: 15px 0 50px -5px rgb(0 0 0 / 0.1),
     10px 0 6px -4px rgb(0 0 0 / 0.1);
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-  height: 100%;
   width: 30px;
-  /* z-index: 990; */
+  z-index: 990;
 }
 
 .side-measure {
@@ -64,6 +75,27 @@ body {
   width: 30px;
   z-index: 990;
 }
+
+.handle {
+  position: fixed;
+  top: 155px;
+  width: 20px;
+  height: 20px;
+  z-index: 999;
+  transform: translateX(-50%);
+}
+
+.handle img {
+  object-fit: contain;
+  width: 20px;
+  height: 20px;
+}
+
+/* .handle-left-top {
+}
+
+.handle-right-top {
+} */
 
 p {
   white-space: pre-line;
@@ -271,6 +303,16 @@ nav ul li {
   font-size: 18px;
 }
 
+#image-input {
+  width: 0;
+  height: 0;
+}
+
+.image-defaults {
+  max-width: 500px;
+  max-height: 500px;
+}
+
 .toolbar-btn {
   width: 25px;
   height: 25px;
@@ -294,7 +336,7 @@ nav ul li {
 }
 
 #text-editor {
-  margin: 75px 0;
+  margin: 100px 0 75px 0;
   /* padding: 1in; */
   /* word-break: break-all; */
   /* word-wrap: break-word; */
