@@ -18,6 +18,8 @@ const topMeasure = document.getElementById("top-measure");
 const sideMeasure = document.getElementById("side-measure");
 const handleLeftTop = document.getElementById("handle-left-top");
 const handleRightTop = document.getElementById("handle-right-top");
+const handleTopLeft = document.getElementById("handle-top-left");
+const handleBottomLeft = document.getElementById("handle-bottom-left");
 
 const boldBtn = myToolbar.getBtn("b");
 const italicBtn = myToolbar.getBtn("i");
@@ -45,17 +47,18 @@ const activeBtns = [];
 
 // Initialization calls
 const initialize = () => {
+  page.focus({ preventScroll: true });
   dpi = document.querySelector(".dpi-calc").offsetWidth;
   const height = dpi * 11;
   const width = dpi * 8.5;
   const rect = page.getBoundingClientRect();
   // page.style.marginTop = `${toolbar.offsetHeight}px`;
-  page.style.height = `calc(${height}px - 2in)`;
-  page.style.minHeight = `calc(${height}px - 2in)`;
-  page.style.maxHeight = `calc(${height}px - 2in)`;
-  page.style.width = `calc(${width}px - 2in)`;
-  page.style.minWidth = `calc(${width}px - 2in)`;
-  page.style.maxWidth = `calc(${width}px - 2in)`;
+  page.style.height = `${height}px`;
+  page.style.minHeight = `${height}px`;
+  page.style.maxHeight = `${height}px`;
+  page.style.width = `${width}px`;
+  page.style.minWidth = `${width}px`;
+  page.style.maxWidth = `${width}px`;
   page.style.padding = "1in";
   createMeasurements(height, width);
   placeHandles();
@@ -117,10 +120,15 @@ const createMeasurements = (height, width) => {
 };
 
 const placeHandles = () => {
-  const pageLeft = page.getBoundingClientRect().left;
-  const pageRight = page.getBoundingClientRect().right;
+  const pageRect = page.getBoundingClientRect();
+  const pageLeft = pageRect.left;
+  const pageRight = pageRect.right;
+  const pageTop = pageRect.top;
+  const pageBottom = pageRect.pageBottom;
   handleLeftTop.style.left = `calc(${pageLeft}px + 1in)`;
   handleRightTop.style.left = `calc(${pageRight}px - 1in)`;
+  handleTopLeft.style.top = `calc(${pageTop}px + 1in)`;
+  handleBottomLeft.style.top = `calc(${pageBottom}px - 1in)`;
 };
 
 const moveArrowUp = (gapBuffer) => {
@@ -661,4 +669,53 @@ navBtns.forEach((btn) => {
   });
 });
 
+// Drag handlers for resizing document padding
+let beginningX = 0;
+handleLeftTop.addEventListener("dragstart", (e) => {
+  const x = e.pageX;
+  beginningX = x;
+  handleLeftTop.style.left = `${x}px`;
+});
+
+handleLeftTop.addEventListener("drag", (e) => {
+  const x = e.pageX;
+  handleLeftTop.style.left = `${x}px`;
+});
+
+handleLeftTop.addEventListener("dragend", (e) => {
+  const x = e.pageX;
+  handleLeftTop.style.left = `${x}px`;
+  // find a way to snap handle to nearest 8th
+  const deltaX = x - beginningX;
+  const computedPadding = window.getComputedStyle(page);
+  const additionalPadding =
+    (parseFloat(computedPadding.paddingLeft) + deltaX) / dpi;
+  page.style.paddingLeft = `${Math.round(additionalPadding * 8) / 8}in`;
+  page.focus({ preventScroll: true });
+});
+
+handleRightTop.addEventListener("dragstart", (e) => {
+  const x = e.pageX;
+  beginningX = x;
+  handleRightTop.style.left = `${x}px`;
+});
+
+handleRightTop.addEventListener("drag", (e) => {
+  const x = e.pageX;
+  handleRightTop.style.left = `${x}px`;
+});
+
+handleRightTop.addEventListener("dragend", (e) => {
+  const x = e.pageX;
+  handleRightTop.style.left = `${x}px`;
+  // find a way to snap handle to nearest 8th
+  const deltaX = x - beginningX;
+  const computedPadding = window.getComputedStyle(page);
+  const additionalPadding =
+    (parseFloat(computedPadding.paddingRight) - deltaX) / dpi;
+  page.style.paddingRight = `${Math.round(additionalPadding * 8) / 8}in`;
+  page.focus({ preventScroll: true });
+});
+
 window.addEventListener("DOMContentLoaded", initialize);
+window.addEventListener("resize", () => placeHandles());

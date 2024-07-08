@@ -12,14 +12,12 @@
 </head>
 
 <body>
-  <div class="top-measure-container">
-    <div class="top-measure" id="top-measure"></div>
-  </div>
   <div class="side-measure-container">
   </div>
-  <div class="side-measure" id="side-measure"></div>
-  <div class="handle-left-top handle" id="handle-left-top"><img src="./assets/handle.svg" alt="handle" width="20px" height="20px"></div>
-  <div class="handle-right-top handle" id="handle-right-top"><img src="./assets/handle.svg" alt="handle" width="20px" height="20px" /> </div>
+  <div class="side-measure" id="side-measure">
+    <div class="handle-top-left handle" id="handle-top-left" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px"></div>
+    <div class="handle-bottom-left handle" id="handle-bottom-left" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px" /> </div>
+  </div>
   <header class="tool-bar" id="tool-bar">
     <div aria-hidden="true" class="dpi-calc"></div>
     <div class="logo-title-nav-container">
@@ -147,9 +145,14 @@
       <input type="file" id="image-input" accept="image/*" />
       <button class="toolbar-btn" id="link-btn"><i class="fa-solid fa-link"></i></button>
     </div>
+    <div class="top-measure-container">
+      <div class="handle-left-top handle" id="handle-left-top" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px"></div>
+      <div class="handle-right-top handle" id="handle-right-top" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px" /> </div>
+      <div class="top-measure" id="top-measure"></div>
+    </div>
   </header>
   <div class="editor-container" id="editor-container">
-    <div id="text-editor" autofocus="true" tabindex="-1">
+    <div id="text-editor" tabindex="-1">
     </div>
   </div>
 </body>
