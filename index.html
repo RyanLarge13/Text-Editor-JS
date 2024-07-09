@@ -15,9 +15,13 @@
   <div class="side-measure-container">
   </div>
   <div class="side-measure" id="side-measure">
-    <div class="handle-top-left handle" id="handle-top-left" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px"></div>
-    <div class="handle-bottom-left handle" id="handle-bottom-left" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px" /> </div>
   </div>
+  <!-- <div class="handle-top-left handle-left" id="handle-top-left" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px"></div>
+  <div class="handle-bottom-left handle-left" id="handle-bottom-left" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px" /> </div> -->
+  <div class="top-red-line"></div>
+  <div class="bottom-red-line"></div>
+  <div class="left-red-line"></div>
+  <div class="right-red-line"></div>
   <header class="tool-bar" id="tool-bar">
     <div aria-hidden="true" class="dpi-calc"></div>
     <div class="logo-title-nav-container">
@@ -61,7 +65,7 @@
       <button class="toolbar-btn">
         <i class="fa-solid fa-rotate-right"></i>
       </button>
-      <button class="toolbar-btn">
+      <button class="toolbar-btn" id="print">
         <i class="fa-solid fa-print"></i>
       </button>
       <button class="toolbar-btn">
@@ -111,8 +115,26 @@
       <button class="toolbar-btn" id="plus-font"><i class="fa-solid fa-plus"></i></button>
       <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
       <select name="font-fam" id="font-fam">
+        <option value="Andale Mono">Andale Mono</option>
         <option value="Arial" selected>Arial</option>
+        <option value="Arial Black">Arial Black</option>
+        <option value="Comic Sans MS">Comic Sans MS</option>
+        <option value="Courier">Courier</option>
+        <option value="Courier New">Courier New</option>
+        <option value="Geneva">Geneva</option>
         <option value="Georgia">Georgia</option>
+        <option value="Helvetica">Helvetica</option>
+        <option value="Impact">Impact</option>
+        <option value="Lucida Console">Lucida Console</option>
+        <option value="Lucida Sans Unicode">Lucida Sans Unicode</option>
+        <option value="Monaco">Monaco</option>
+        <option value="Palatino">Palatino</option>
+        <option value="Palatino Linotype">Palatino Linotype</option>
+        <option value="Tahoma">Tahoma</option>
+        <option value="Times">Times</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Trebuchet MS">Trebuchet MS</option>
+        <option value="Verdana">Verdana</option>
       </select>
       <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
       <!-- <button class="toolbar-btn" id="h1"><i class="fa-solid fa-heading"></i></button> -->

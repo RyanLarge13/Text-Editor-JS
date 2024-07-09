@@ -10,7 +10,14 @@ class Editor {
         buffer: new Buffer(),
         styles: {
           fontSize: "12px",
-          lineHeight: "2em",
+          fontStyle: "normal",
+          fontFamily: "Arial",
+          fontWeight: 400,
+          textDecoration: "normal",
+          textAlign: "left",
+          lineHeight: "1em",
+          color: "#000000",
+          backgroundColor: "transparent",
         },
         children: [],
         parent: this.page,
@@ -22,7 +29,14 @@ class Editor {
     this.currentTextBuffer.DOMNode.addEventListener("click", this.clickHandler);
     Object.assign(this.currentTextBuffer.DOMNode.style, {
       fontSize: "12px",
-      lineHeight: "2em",
+      fontStyle: "normal",
+      fontFamily: "Arial",
+      fontWeight: 400,
+      textDecoration: "normal",
+      textAlign: "left",
+      lineHeight: "1em",
+      color: "#000000",
+      backgroundColor: "transparent",
     });
     this.print(true);
   }
@@ -84,6 +98,28 @@ class Editor {
   }
 
   createSpan() {}
+
+  createNewQuote(styles) {
+    const newQuote = document.createElement("blockquote");
+    this.page.appendChild(newQuote);
+    const newTextBuffer = {
+      type: "blockquote",
+      DOMNode: newQuote,
+      buffer: new Buffer(),
+      styles: styles,
+      children: [],
+      parent: this.page,
+    };
+    if (styles) {
+      Object.assign(newQuote.style, styles);
+    }
+    newQuote.addEventListener("click", this.clickHandler);
+    this.print(false);
+    this.elements.push(newTextBuffer);
+    this.length += 1;
+    this.currentTextBuffer = newTextBuffer;
+    this.print(true);
+  }
 
   createList(type, inputType, styles) {
     const newList = document.createElement(type);

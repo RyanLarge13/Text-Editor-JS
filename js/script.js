@@ -18,8 +18,14 @@ const topMeasure = document.getElementById("top-measure");
 const sideMeasure = document.getElementById("side-measure");
 const handleLeftTop = document.getElementById("handle-left-top");
 const handleRightTop = document.getElementById("handle-right-top");
-const handleTopLeft = document.getElementById("handle-top-left");
-const handleBottomLeft = document.getElementById("handle-bottom-left");
+// const handleTopLeft = document.getElementById("handle-top-left");
+// const handleBottomLeft = document.getElementById("handle-bottom-left");
+const topRed = document.querySelector(".top-red-line");
+const bottomRed = document.querySelector(".bottom-red-line");
+const leftRed = document.querySelector(".left-red-line");
+const rightRed = document.querySelector(".right-red-line");
+
+const printBtn = myToolbar.getBtn("print");
 
 const boldBtn = myToolbar.getBtn("b");
 const italicBtn = myToolbar.getBtn("i");
@@ -51,7 +57,7 @@ const initialize = () => {
   dpi = document.querySelector(".dpi-calc").offsetWidth;
   const height = dpi * 11;
   const width = dpi * 8.5;
-  const rect = page.getBoundingClientRect();
+  // const rect = page.getBoundingClientRect();
   // page.style.marginTop = `${toolbar.offsetHeight}px`;
   page.style.height = `${height}px`;
   page.style.minHeight = `${height}px`;
@@ -62,6 +68,42 @@ const initialize = () => {
   page.style.padding = "1in";
   createMeasurements(height, width);
   placeHandles();
+  createRedLines();
+};
+
+const createRedLines = () => {
+  // top
+  topRed.style.width = "100%";
+  topRed.style.borderTop = "1px solid rgba(255, 0, 0, 0.1)";
+  topRed.style.position = "absolute";
+  topRed.style.top = `${page.getBoundingClientRect().top}px`;
+  topRed.style.left = 0;
+  topRed.style.right = 0;
+  topRed.style.zIndex = "989";
+  // bottom
+  bottomRed.style.width = "100%";
+  bottomRed.style.borderBottom = "1px solid rgba(255, 0, 0, 0.1)";
+  bottomRed.style.position = "absolute";
+  bottomRed.style.top = `${page.getBoundingClientRect().bottom}px`;
+  bottomRed.style.left = 0;
+  bottomRed.style.right = 0;
+  bottomRed.style.zIndex = "989";
+  // left
+  leftRed.style.height = "150vh";
+  leftRed.style.borderRight = "1px solid rgba(255, 0, 0, 0.1)";
+  leftRed.style.position = "absolute";
+  leftRed.style.left = `${page.getBoundingClientRect().left}px`;
+  leftRed.style.top = 0;
+  leftRed.style.bottom = 0;
+  leftRed.style.zIndex = "989";
+  // right
+  rightRed.style.height = "150vh";
+  rightRed.style.borderLeft = "1px solid rgba(255, 0, 0, 0.1)";
+  rightRed.style.position = "absolute";
+  rightRed.style.left = `${page.getBoundingClientRect().right}px`;
+  rightRed.style.top = 0;
+  rightRed.style.bottom = 0;
+  rightRed.style.zIndex = "989";
 };
 
 const createMeasurements = (height, width) => {
@@ -124,11 +166,12 @@ const placeHandles = () => {
   const pageLeft = pageRect.left;
   const pageRight = pageRect.right;
   const pageTop = pageRect.top;
-  const pageBottom = pageRect.pageBottom;
+  // const pageBottom = pageRect.bottom;
+  sideMeasure.style.top = `${pageTop}px`;
   handleLeftTop.style.left = `calc(${pageLeft}px + 1in)`;
   handleRightTop.style.left = `calc(${pageRight}px - 1in)`;
-  handleTopLeft.style.top = `calc(${pageTop}px + 1in)`;
-  handleBottomLeft.style.top = `calc(${pageBottom}px - 1in)`;
+  // handleTopLeft.style.top = `calc(${pageTop}px + 1in)`;
+  // handleBottomLeft.style.top = `calc(${pageBottom}px - 1in)`;
 };
 
 const moveArrowUp = (gapBuffer) => {
@@ -164,8 +207,9 @@ const generateNewStyles = (type) => {
       headings.value = "normal";
       fontSizePicker.value = "12";
       currentStyles.fontSize = "12px";
-      return currentStyles;
+      currentStyles.textAlign = "left";
     }
+    return currentStyles;
   }
 };
 
@@ -190,6 +234,12 @@ const handleEnter = (type, parentType, gapBuffer) => {
       case "h6":
         editor.createNewText("p", generateNewStyles("p"));
         return;
+      case "p":
+        editor.createNewText("p", generateNewStyles("p"));
+
+        return;
+      case "span":
+        editor.createNewText("p", generateNewStyles("p"));
       default:
         break;
     }
@@ -257,6 +307,9 @@ page.addEventListener("keydown", (e) => {
       {
         const type = editor.getElemType();
         const parentType = editor.getParentType();
+        if (gapBuffer.print().length < 1) {
+          gapBuffer.insert("\n", gapBuffer.getCurrentPos());
+        }
         handleEnter(type, parentType, gapBuffer);
       }
       break;
@@ -310,8 +363,12 @@ page.addEventListener("mouseup", (e) => {
 fontSizePicker.addEventListener("change", (e) => {
   const newSize = e.target.value;
   const stylesToAdd = editor.getCurrentStyles();
-  stylesToAdd.fontSize = `${Number(newSize)}px`;
-  editor.nestSpan(stylesToAdd);
+  stylesToAdd.fontSize = `${newSize}px`;
+  if (editor.getBuffer().print().length < 1) {
+    editor.updateBufferStyle(stylesToAdd);
+  } else {
+    editor.nestSpan(stylesToAdd);
+  }
   page.focus({ preventScroll: true });
 });
 
@@ -319,7 +376,11 @@ fontFamPicker.addEventListener("change", (e) => {
   const newFont = e.target.value;
   const stylesToAdd = editor.getCurrentStyles();
   stylesToAdd.fontFamily = newFont;
-  editor.nestSpan(stylesToAdd);
+  if (editor.getBuffer().print().length < 1) {
+    editor.updateBufferStyle(stylesToAdd);
+  } else {
+    editor.nestSpan(stylesToAdd);
+  }
   page.focus({ preventScroll: true });
 });
 
@@ -429,7 +490,11 @@ boldBtn.addEventListener("click", () => {
   } else {
     stylesToAdd.fontWeight = 600;
   }
-  editor.nestSpan(stylesToAdd);
+  if (editor.getBuffer().print().length < 1) {
+    editor.updateBufferStyle(stylesToAdd);
+  } else {
+    editor.nestSpan(stylesToAdd);
+  }
   page.focus({ preventScroll: true });
 });
 
@@ -441,7 +506,11 @@ italicBtn.addEventListener("click", () => {
   } else {
     stylesToAdd.fontStyle = "italic";
   }
-  editor.nestSpan(stylesToAdd);
+  if (editor.getBuffer().print().length < 1) {
+    editor.updateBufferStyle(stylesToAdd);
+  } else {
+    editor.nestSpan(stylesToAdd);
+  }
   page.focus({ preventScroll: true });
 });
 
@@ -453,7 +522,11 @@ underlineBtn.addEventListener("click", () => {
   } else {
     stylesToAdd.textDecoration = "underline";
   }
-  editor.nestSpan(stylesToAdd);
+  if (editor.getBuffer().print().length < 1) {
+    editor.updateBufferStyle(stylesToAdd);
+  } else {
+    editor.nestSpan(stylesToAdd);
+  }
   page.focus({ preventScroll: true });
 });
 
@@ -465,7 +538,11 @@ strikeThroughBtn.addEventListener("click", () => {
   } else {
     stylesToAdd.textDecoration = "line-through";
   }
-  editor.nestSpan(stylesToAdd);
+  if (editor.getBuffer().print().length < 1) {
+    editor.updateBufferStyle(stylesToAdd);
+  } else {
+    editor.nestSpan(stylesToAdd);
+  }
   page.focus({ preventScroll: true });
 });
 
@@ -549,20 +626,28 @@ outdentBtn.addEventListener("click", (e) => {
   indent--;
 });
 
-plusFont.addEventListener("click", (e) => {
+plusFont.addEventListener("click", () => {
   const currentIndex = fontSizePicker.selectedIndex;
   const newIndex = (currentIndex + 1) % fontSizePicker.options.length;
   fontSizePicker.selectedIndex = newIndex;
   const value = fontSizePicker.options[newIndex].value;
-  editor.updateBufferStyle({ fontSize: `${value}px` });
+  if (editor.getBuffer().print().length < 1) {
+    editor.updateBufferStyle({ fontSize: `${value}px` });
+  } else {
+    editor.nestSpan({ ...editor.getCurrentStyles, fontSize: `${value}px` });
+  }
 });
 
-minusFont.addEventListener("click", (e) => {
+minusFont.addEventListener("click", () => {
   const currentIndex = fontSizePicker.selectedIndex;
   const newIndex = (currentIndex - 1) % fontSizePicker.options.length;
   fontSizePicker.selectedIndex = newIndex;
   const value = fontSizePicker.options[newIndex].value;
-  editor.updateBufferStyle({ fontSize: `${value}px` });
+  if (editor.getBuffer().print().length < 1) {
+    editor.updateBufferStyle({ fontSize: `${value}px` });
+  } else {
+    editor.nestSpan({ ...editor.getCurrentStyles, fontSize: `${value}px` });
+  }
 });
 
 fontColor.addEventListener("click", (e) => {
@@ -585,7 +670,11 @@ fontColor.addEventListener("click", (e) => {
       fontIconColor.style.backgroundColor = color;
       fontColor.removeAttribute("disabled");
       // handle logic if we are currently in a list
-      editor.nestSpan(currentStyles);
+      if (editor.getBuffer().print().length < 1) {
+        editor.updateBufferStyle(currentStyles);
+      } else {
+        editor.nestSpan(currentStyles);
+      }
       toolbar.removeChild(newColorSelect);
       page.focus({ preventScroll: true });
     });
@@ -615,7 +704,11 @@ highlight.addEventListener("click", (e) => {
       highlightColor.style.backgroundColor = color;
       highlight.removeAttribute("disabled");
       // handle style updates if we are currently in a list
-      editor.nestSpan(currentStyles);
+      if (editor.getBuffer().print().length < 1) {
+        editor.updateBufferStyle(currentStyles);
+      } else {
+        editor.nestSpan(currentStyles);
+      }
       toolbar.removeChild(newColorSelect);
       page.focus({ preventScroll: true });
     });
@@ -646,6 +739,11 @@ imageInput.addEventListener("change", (e) => {
   }
 });
 
+quoteBtn.addEventListener("click", () => {
+  editor.createNewQuote(editor.getCurrentStyles());
+  page.focus({ preventScroll: true });
+});
+
 navBtns.forEach((btn) => {
   btn.addEventListener("click", (e) => {
     const btnText = e.target.innerText;
@@ -670,7 +768,8 @@ navBtns.forEach((btn) => {
 });
 
 // Drag handlers for resizing document padding
-let beginningX = 0;
+let beginningX;
+// let beginningY;
 handleLeftTop.addEventListener("dragstart", (e) => {
   const x = e.pageX;
   beginningX = x;
@@ -717,5 +816,58 @@ handleRightTop.addEventListener("dragend", (e) => {
   page.focus({ preventScroll: true });
 });
 
+// handleTopLeft.addEventListener("dragstart", (e) => {
+//   const y = e.pageY;
+//   beginningY = y;
+//   handleTopLeft.style.top = `${y}px`;
+// });
+
+// handleTopLeft.addEventListener("drag", (e) => {
+//   const y = e.pageY;
+//   handleTopLeft.style.top = `${y}px`;
+// });
+
+// handleTopLeft.addEventListener("dragend", (e) => {
+//   const y = e.pageY;
+//   handleTopLeft.style.top = `${y}px`;
+//   // find a way to snap handle to nearest 8th
+//   const deltaY = y - beginningY;
+//   const computedPadding = window.getComputedStyle(page);
+//   const additionalPadding =
+//     (parseFloat(computedPadding.paddingTop) + deltaY) / dpi;
+//   page.style.paddingTop = `${Math.round(additionalPadding * 8) / 8}in`;
+//   page.focus({ preventScroll: true });
+// });
+
+// handleBottomLeft.addEventListener("dragstart", (e) => {
+//   const y = e.pageY;
+//   beginningY = y;
+//   handleBottomLeft.style.top = `${y}px`;
+// });
+
+// handleBottomLeft.addEventListener("drag", (e) => {
+//   const y = e.pageY;
+//   handleBottomLeft.style.top = `${y}px`;
+// });
+
+// handleBottomLeft.addEventListener("dragend", (e) => {
+//   const y = e.pageY;
+//   handleBottomLeft.style.top = `${y}px`;
+//   // find a way to snap handle to nearest 8th
+//   const deltaY = y - beginningY;
+//   const computedPadding = window.getComputedStyle(page);
+//   const additionalPadding =
+//     (parseFloat(computedPadding.paddingTop) - deltaY) / dpi;
+//   page.style.paddingBottom = `${Math.round(additionalPadding * 8) / 8}in`;
+//   page.focus({ preventScroll: true });
+// });
+
+printBtn.addEventListener("click", () => {
+  window.print();
+});
+
 window.addEventListener("DOMContentLoaded", initialize);
-window.addEventListener("resize", () => placeHandles());
+window.addEventListener("resize", () => {
+  placeHandles();
+  createRedLines();
+});
