@@ -18,10 +18,10 @@
   </div>
   <!-- <div class="handle-top-left handle-left" id="handle-top-left" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px"></div>
   <div class="handle-bottom-left handle-left" id="handle-bottom-left" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px" /> </div> -->
-  <div class="top-red-line"></div>
-  <div class="bottom-red-line"></div>
-  <div class="left-red-line"></div>
-  <div class="right-red-line"></div>
+  <div class="top-red-line red-line" draggable="true"></div>
+  <div class="bottom-red-line" draggable="true"></div>
+  <div class="left-red-line red-line" draggable="true"></div>
+  <div class="right-red-line" draggable="true"></div>
   <header class="tool-bar" id="tool-bar">
     <div aria-hidden="true" class="dpi-calc"></div>
     <div class="logo-title-nav-container">
@@ -166,6 +166,54 @@
       <button class="toolbar-btn" id="video-btn"><i class="fa-solid fa-video"></i></button>
       <input type="file" id="image-input" accept="image/*" />
       <button class="toolbar-btn" id="link-btn"><i class="fa-solid fa-link"></i></button>
+    </div>
+    <div class="page-width-height-padding">
+      <div>
+        <label for="page-width">
+          <i class="fa-solid fa-w"></i>
+          <input type="text" id="page-width" name="page-width" class="page-width" placeholder="Width" value="8.5">
+        </label>
+        <div>
+          <button class="" id=""><i class="fa-solid fa-minus"></i></button>
+          <button class="" id=""><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+      <div>
+        <label for="page-height"><i class="fa-solid fa-h"></i>
+          <input type="text" id="page-height" name="page-height" class="page-height" placeholder="Height" value="11.0">
+        </label>
+        <div>
+          <button class="" id=""><i class="fa-solid fa-minus"></i></button>
+          <button class="" id=""><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+      <div>
+        <label for="page-padding-left-right"><i class="fa-solid fa-arrows-left-right"></i>
+          <input type="text" id="page-padding-left-right" name="page-padding-left-right" class="page-padding-left-right" placeholder="Padding Width" value="1.0">
+        </label>
+        <div>
+          <button class="" id=""><i class="fa-solid fa-minus"></i></button>
+          <button class="" id=""><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+      <div>
+        <label for="page-padding-top-bottom"><i class="fa-solid fa-arrows-up-down"></i>
+          <input type="text" id="page-padding-top-bottom" name="page-padding-top-bottom" class="page-padding-top-bottom" placeholder="Padding Height" value="1.0">
+        </label>
+        <div>
+          <button class="" id=""><i class="fa-solid fa-minus"></i></button>
+          <button class="" id=""><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+      <select name="measurement-select" id="measurement-select">
+        <option value="in" selected>inch</option>
+        <option value="mm">mm</option>
+        <option value="cm">cm</option>
+      </select>
     </div>
     <div class="top-measure-container">
       <div class="handle-left-top handle" id="handle-left-top" draggable="true"><img src="./assets/handle.svg" alt="handle" width="15px" height="20px"></div>

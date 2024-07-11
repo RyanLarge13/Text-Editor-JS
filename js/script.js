@@ -636,6 +636,7 @@ plusFont.addEventListener("click", () => {
   } else {
     editor.nestSpan({ ...editor.getCurrentStyles, fontSize: `${value}px` });
   }
+  page.focus({ preventScroll: true });
 });
 
 minusFont.addEventListener("click", () => {
@@ -648,6 +649,7 @@ minusFont.addEventListener("click", () => {
   } else {
     editor.nestSpan({ ...editor.getCurrentStyles, fontSize: `${value}px` });
   }
+  page.focus({ preventScroll: true });
 });
 
 fontColor.addEventListener("click", (e) => {
@@ -743,6 +745,8 @@ quoteBtn.addEventListener("click", () => {
   editor.createNewQuote(editor.getCurrentStyles());
   page.focus({ preventScroll: true });
 });
+
+codeBtn.addEventListener("click", () => {});
 
 navBtns.forEach((btn) => {
   btn.addEventListener("click", (e) => {
@@ -864,6 +868,78 @@ handleRightTop.addEventListener("dragend", (e) => {
 
 printBtn.addEventListener("click", () => {
   window.print();
+});
+
+let prevDist = 0;
+topRed.addEventListener("dragstart", (e) => {
+  topRed.style.top = `${e.pageY}px`;
+  prevDist = e.pageY;
+});
+
+topRed.addEventListener("drag", (e) => {
+  if (e.pageY === 0) return;
+  const bottomStyles = window.getComputedStyle(bottomRed);
+  const pageStyles = window.getComputedStyle(page);
+  const currentBottomRedTop = parseFloat(bottomStyles.top);
+  const pageMarginTop = parseFloat(pageStyles.marginTop);
+  const disTraveled = e.pageY - prevDist;
+  topRed.style.top = `${e.pageY}px`;
+  bottomRed.style.top = `${currentBottomRedTop - disTraveled}px`;
+  const diffBetweenLines = Math.abs(
+    e.pageY - (currentBottomRedTop - disTraveled)
+  );
+  page.style.marginTop = `${disTraveled + pageMarginTop}px`;
+  page.style.height = `${diffBetweenLines}px`;
+  page.style.minHeight = `${diffBetweenLines}px`;
+  page.style.maxHeight = `${diffBetweenLines}px`;
+  prevDist = e.pageY;
+});
+
+topRed.addEventListener("dragend", (e) => {
+  topRed.style.top = `${e.pageY}px`;
+  prevDist = 0;
+});
+
+// bottomRed.addEventListener("dragstart", (e) => {});
+
+// bottomRed.addEventListener("drag", (e) => {});
+
+// bottomRed.addEventListener("dragend", (e) => {});
+
+// rightRed.addEventListener("dragstart", (e) => {});
+
+// rightRed.addEventListener("drag", (e) => {});
+
+// rightRed.addEventListener("dragend", (e) => {});
+
+leftRed.addEventListener("dragstart", (e) => {
+  leftRed.style.left = `${e.pageX}px`;
+  prevDist = e.pageX;
+});
+
+leftRed.addEventListener("drag", (e) => {
+  if (e.pageX === 0) return;
+  const rightStyles = window.getComputedStyle(rightRed);
+  // const pageStyles = window.getComputedStyle(page);
+  const currentRightRedLeft = parseFloat(rightStyles.left);
+  // const pageMarginTop = parseFloat(pageStyles.marginTop);
+  const disTraveled = e.pageX - prevDist;
+  leftRed.style.left = `${e.pageX}px`;
+  rightRed.style.left = `${currentRightRedLeft - disTraveled}px`;
+  const diffBetweenLines = Math.abs(
+    e.pageX - (currentRightRedLeft - disTraveled)
+  );
+  // page.style.marginTop = `${disTraveled + pageMarginTop}px`;
+  page.style.width = `${diffBetweenLines}px`;
+  page.style.minWidth = `${diffBetweenLines}px`;
+  page.style.maxWidth = `${diffBetweenLines}px`;
+  placeHandles();
+  prevDist = e.pageX;
+});
+
+leftRed.addEventListener("dragend", (e) => {
+  leftRed.style.left = `${e.pageX}px`;
+  prevDist = 0;
 });
 
 window.addEventListener("DOMContentLoaded", initialize);

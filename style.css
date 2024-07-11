@@ -74,7 +74,7 @@ body::-webkit-scrollbar-thumb {
 
 .handle {
   position: fixed;
-  top: 140px;
+  top: 175px;
   width: 15px;
   height: 15px;
   z-index: 999;
@@ -107,11 +107,68 @@ body::-webkit-scrollbar-thumb {
   min-height: 15px;
 }
 
+.red-line {
+  cursor: grab;
+}
+
 /* .handle-left-top {
 }
 
 .handle-right-top {
 } */
+
+.page-width-height-padding {
+  padding: 0.5em 1em 0 1em;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  /* gap: 25px; */
+}
+
+.page-width-height-padding div {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 3px;
+  background-color: rgb(218, 219, 255);
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+.page-width-height-padding input {
+  outline: none;
+  border: none;
+  width: 50px;
+  background-color: rgb(238, 239, 255);
+  padding: 3px 4px;
+  border-radius: 2px;
+  font-weight: 500;
+  font-size: 12px;
+  transition: 200ms ease-in-out;
+}
+
+.page-width-height-padding button {
+  background-color: rgb(238, 239, 255);
+  outline: none;
+  border: none;
+  padding: 2px 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: 200ms ease-in-out;
+}
+
+.page-width-height-padding button:hover {
+  background-color: rgb(209, 209, 255);
+}
+
+.page-width-height-padding input:hover {
+  background-color: rgb(209, 209, 255);
+}
+
+.page-width-height-padding i {
+  font-size: 11px;
+  margin-right: 3px;
+}
 
 p {
   white-space: pre-line;
@@ -154,6 +211,12 @@ blockquote::after {
   font-size: 4em;
   line-height: 1;
   color: #ccc;
+}
+
+pre {
+}
+
+code {
 }
 
 input:checked {

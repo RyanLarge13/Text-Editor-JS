@@ -230,7 +230,9 @@ class Editor {
 
   eraseBuff() {
     if (this.currentTextBuffer !== null && this.length !== 0) {
-      this.page.removeChild(this.currentTextBuffer.DOMNode);
+      const currentNode = this.currentTextBuffer.DOMNode;
+      const currentParent = this.currentTextBuffer.parent;
+      currentParent.removeChild(currentNode);
       this.setBuffer(this.length - 1);
       this.elements.splice(this.length + 1, 1);
     }
