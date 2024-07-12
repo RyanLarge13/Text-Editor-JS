@@ -2,6 +2,13 @@ import colors from "../constants/colors.js";
 import Editor from "./editor.js";
 import Toolbar from "./toolbar.js";
 
+/*
+TODO: 
+1. Make padding width dynamic. We need to dynamically adjust the handles when updating the padding of the page manually
+2. Fix width on new quote!!
+3. Create a notification system to notify users of errors in input
+*/
+
 let dpi;
 let indent = 0;
 let lastIndent = true;
@@ -24,6 +31,14 @@ const topRed = document.querySelector(".top-red-line");
 const bottomRed = document.querySelector(".bottom-red-line");
 const leftRed = document.querySelector(".left-red-line");
 const rightRed = document.querySelector(".right-red-line");
+const pageWidthInput = document.getElementById("page-width");
+const pageHeightInput = document.getElementById("page-height");
+const pagePaddingWidthInput = document.getElementById(
+  "page-padding-left-right"
+);
+const pagePaddingHeightInput = document.getElementById(
+  "page-padding-top-bottom"
+);
 
 const printBtn = myToolbar.getBtn("print");
 
@@ -161,15 +176,15 @@ const createMeasurements = (height, width) => {
   }
 };
 
-const placeHandles = () => {
+const placeHandles = (left = 1, right = 1) => {
   const pageRect = page.getBoundingClientRect();
   const pageLeft = pageRect.left;
   const pageRight = pageRect.right;
   const pageTop = pageRect.top;
   // const pageBottom = pageRect.bottom;
   sideMeasure.style.top = `${pageTop}px`;
-  handleLeftTop.style.left = `calc(${pageLeft}px + 1in)`;
-  handleRightTop.style.left = `calc(${pageRight}px - 1in)`;
+  handleLeftTop.style.left = `calc(${pageLeft}px + ${left}in)`;
+  handleRightTop.style.left = `calc(${pageRight}px - ${right}in)`;
   // handleTopLeft.style.top = `calc(${pageTop}px + 1in)`;
   // handleBottomLeft.style.top = `calc(${pageBottom}px - 1in)`;
 };
@@ -746,7 +761,42 @@ quoteBtn.addEventListener("click", () => {
   page.focus({ preventScroll: true });
 });
 
-codeBtn.addEventListener("click", () => {});
+codeBtn.addEventListener("click", () => {
+  editor.createNewCode({
+    ...editor.getCurrentStyles(),
+    fontFamily: "'Courier New', Courier, monospace",
+  });
+  page.focus({ preventScroll: true });
+});
+
+linkBtn.addEventListener("click", (e) => {
+  const linkInput = document.getElementById("link-input");
+  const newInput = document.createElement("input");
+  const rect = linkBtn.getBoundingClientRect();
+  myToolbar.toggleBtns(["link-btn"]);
+  linkInput.appendChild(newInput);
+  linkInput.classList.add("show");
+  linkInput.style.top = `${rect.top + rect.height}px`;
+  linkInput.style.left = `${rect.left}px`;
+  newInput.value = "https://";
+  newInput.focus({ preventScroll: true });
+  newInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      editor.createNewText("a", {
+        ...editor.getCurrentStyles(),
+        textDecoration: "underline",
+        color: "#0000EE",
+        fontStyle: "italic",
+      });
+      editor.currentTextBuffer.DOMNode.href = newInput.value;
+      editor.currentTextBuffer.DOMNode.target = "_blank";
+      linkInput.value = "";
+      linkInput.classList.remove("show");
+      myToolbar.toggleBtns(["link-btn"]);
+      page.focus({ preventScroll: true });
+    }
+  });
+});
 
 navBtns.forEach((btn) => {
   btn.addEventListener("click", (e) => {
@@ -892,6 +942,7 @@ topRed.addEventListener("drag", (e) => {
   page.style.height = `${diffBetweenLines}px`;
   page.style.minHeight = `${diffBetweenLines}px`;
   page.style.maxHeight = `${diffBetweenLines}px`;
+  pageHeightInput.value = `${diffBetweenLines / dpi}`;
   prevDist = e.pageY;
 });
 
@@ -933,6 +984,7 @@ leftRed.addEventListener("drag", (e) => {
   page.style.width = `${diffBetweenLines}px`;
   page.style.minWidth = `${diffBetweenLines}px`;
   page.style.maxWidth = `${diffBetweenLines}px`;
+  pageWidthInput.value = `${diffBetweenLines / dpi}`;
   placeHandles();
   prevDist = e.pageX;
 });
@@ -940,6 +992,75 @@ leftRed.addEventListener("drag", (e) => {
 leftRed.addEventListener("dragend", (e) => {
   leftRed.style.left = `${e.pageX}px`;
   prevDist = 0;
+});
+
+let pageWidthInit = 8.5;
+pageWidthInput.addEventListener("focus", (e) => {
+  pageWidthInit = parseFloat(e.target.value);
+});
+pageWidthInput.addEventListener("change", (e) => {
+  const value = parseFloat(e.target.value).toFixed(2);
+  if (value > 20) {
+    pageWidthInput.value = pageWidthInit;
+    // Notify user of invalid input
+    return;
+  }
+  if (isNaN(value)) {
+    pageWidthInput.value = pageWidthInit;
+    return;
+  }
+  page.style.width = `${value}in`;
+  page.style.maxWidth = `${value}in`;
+  page.style.minWidth = `${value}in`;
+  placeHandles();
+  createRedLines();
+});
+
+let pageHeightInit = 11;
+pageHeightInput.addEventListener("focus", (e) => {
+  pageHeightInit = parseFloat(e.target.value);
+});
+pageHeightInput.addEventListener("change", (e) => {
+  const value = parseFloat(e.target.value).toFixed(2);
+  if (value > 20) {
+    pageHeightInput.value = pageHeightInit;
+    // Notify user of invalid input
+    return;
+  }
+  if (isNaN(value)) {
+    pageHeightInput.value = pageHeightInit;
+    return;
+  }
+  page.style.height = `${value}in`;
+  page.style.maxHeight = `${value}in`;
+  page.style.minHeight = `${value}in`;
+  // create adjustable margin to react as though you were dragging the red lines
+  // const pageStyles = window.getComputedStyle(page);
+  // const marginTop = parseFloat(pageStyles.marginTop);
+  // page.marginTop = `calc(${marginTop}px - ${value - pageHeightInit}in)`;
+  placeHandles();
+  createRedLines();
+});
+
+let pagePadWidthInit = 1;
+pagePaddingWidthInput.addEventListener("focus", (e) => {
+  pagePadWidthInit = parseFloat(e.target.value);
+});
+
+pagePaddingWidthInput.addEventListener("change", (e) => {
+  const value = parseFloat(e.target.value).toFixed(2);
+  if (value > 3) {
+    pagePaddingWidthInput.value = pagePadWidthInit;
+    // Notify user of invalid input
+    return;
+  }
+  if (isNaN(value)) {
+    pagePaddingWidthInput.value = pagePadWidthInit;
+    return;
+  }
+  page.style.paddingLeft = `${value}in`;
+  page.style.paddingRight = `${value}in`;
+  placeHandles(value, value);
 });
 
 window.addEventListener("DOMContentLoaded", initialize);

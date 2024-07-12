@@ -121,6 +121,30 @@ class Editor {
     this.print(true);
   }
 
+  createNewCode(styles) {
+    const pre = document.createElement("pre");
+    const code = document.createElement("code");
+    pre.appendChild(code);
+    this.page.appendChild(pre);
+    const newTextBuffer = {
+      type: "code",
+      DOMNode: code,
+      buffer: new Buffer(),
+      styles: styles,
+      children: [],
+      parent: this.page,
+    };
+    if (styles) {
+      Object.assign(code.style, styles);
+    }
+    code.addEventListener("click", this.clickHandler);
+    this.print(false);
+    this.elements.push(newTextBuffer);
+    this.length += 1;
+    this.currentTextBuffer = newTextBuffer;
+    this.print(true);
+  }
+
   createList(type, inputType, styles) {
     const newList = document.createElement(type);
     const newLi = document.createElement("li");
