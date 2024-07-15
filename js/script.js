@@ -12,6 +12,9 @@ TODO:
 let dpi;
 let indent = 0;
 let lastIndent = true;
+let userDefMeasurements = "in";
+let pagePaddingVert = 1.0;
+let pagePaddingHor = 1.0;
 
 const page = document.getElementById("text-editor");
 const toolbar = document.getElementById("toolbar-btn-container");
@@ -39,6 +42,7 @@ const pagePaddingWidthInput = document.getElementById(
 const pagePaddingHeightInput = document.getElementById(
   "page-padding-top-bottom"
 );
+const userMeasurementSelect = document.getElementById("measurement-select");
 
 const printBtn = myToolbar.getBtn("print");
 
@@ -64,7 +68,6 @@ const videoBtn = myToolbar.getBtn("video-btn");
 const quoteBtn = myToolbar.getBtn("quote-btn");
 const codeBtn = myToolbar.getBtn("code-btn");
 const linkBtn = myToolbar.getBtn("link-btn");
-const activeBtns = [];
 
 // Initialization calls
 const initialize = () => {
@@ -80,7 +83,7 @@ const initialize = () => {
   page.style.width = `${width}px`;
   page.style.minWidth = `${width}px`;
   page.style.maxWidth = `${width}px`;
-  page.style.padding = "1in";
+  page.style.padding = `${pagePaddingVert}${userDefMeasurements} ${pagePaddingHor}${userDefMeasurements}`;
   createMeasurements(height, width);
   placeHandles();
   createRedLines();
@@ -176,15 +179,15 @@ const createMeasurements = (height, width) => {
   }
 };
 
-const placeHandles = (left = 1, right = 1) => {
+const placeHandles = () => {
   const pageRect = page.getBoundingClientRect();
   const pageLeft = pageRect.left;
   const pageRight = pageRect.right;
   const pageTop = pageRect.top;
   // const pageBottom = pageRect.bottom;
   sideMeasure.style.top = `${pageTop}px`;
-  handleLeftTop.style.left = `calc(${pageLeft}px + ${left}in)`;
-  handleRightTop.style.left = `calc(${pageRight}px - ${right}in)`;
+  handleLeftTop.style.left = `calc(${pageLeft}px + ${pagePaddingHor}${userDefMeasurements})`;
+  handleRightTop.style.left = `calc(${pageRight}px - ${pagePaddingHor}${userDefMeasurements})`;
   // handleTopLeft.style.top = `calc(${pageTop}px + 1in)`;
   // handleBottomLeft.style.top = `calc(${pageBottom}px - 1in)`;
 };
@@ -721,11 +724,11 @@ highlight.addEventListener("click", (e) => {
       highlightColor.style.backgroundColor = color;
       highlight.removeAttribute("disabled");
       // handle style updates if we are currently in a list
-      if (editor.getBuffer().print().length < 1) {
-        editor.updateBufferStyle(currentStyles);
-      } else {
-        editor.nestSpan(currentStyles);
-      }
+      editor.nestSpan(currentStyles);
+      // if (editor.getBuffer().print().length < 1) {
+      //   editor.updateBufferStyle(currentStyles);
+      // } else {
+      // }
       toolbar.removeChild(newColorSelect);
       page.focus({ preventScroll: true });
     });
@@ -1042,13 +1045,13 @@ pageHeightInput.addEventListener("change", (e) => {
   createRedLines();
 });
 
-let pagePadWidthInit = 1;
+let pagePadWidthInit = 1.0;
 pagePaddingWidthInput.addEventListener("focus", (e) => {
   pagePadWidthInit = parseFloat(e.target.value);
 });
 
 pagePaddingWidthInput.addEventListener("change", (e) => {
-  const value = parseFloat(e.target.value).toFixed(2);
+  const value = parseFloat(e.target.value).toFixed(1);
   if (value > 3) {
     pagePaddingWidthInput.value = pagePadWidthInit;
     // Notify user of invalid input
@@ -1060,7 +1063,119 @@ pagePaddingWidthInput.addEventListener("change", (e) => {
   }
   page.style.paddingLeft = `${value}in`;
   page.style.paddingRight = `${value}in`;
-  placeHandles(value, value);
+  pagePaddingWidthInput.value = value;
+  pagePaddingHor = value;
+  placeHandles();
+});
+
+let prevDefMeasure;
+userMeasurementSelect.addEventListener("focus", (e) => {
+  prevDefMeasure = userMeasurementSelect.value;
+});
+
+userMeasurementSelect.addEventListener("change", (e) => {
+  const value = e.target.value;
+  const pageStyles = window.getComputedStyle(page);
+  const currentWidth = parseFloat(pageStyles.width).toFixed(1);
+  const currentHeight = parseFloat(pageStyles.height).toFixed(1);
+  const wInInch = currentWidth * dpi;
+  const wInMm = currentWidth * dpi * 25.4;
+  const wInCm = currentWidth * dpi * 2.54;
+  const hInInch = currentHeight * dpi;
+  const hInMm = currentHeight * dpi * 25.4;
+  const hInCm = currentHeight * dpi * 2.54;
+  let newWidth;
+  let newHeight;
+  let newPadWidth;
+  let newPadHeight;
+  userDefMeasurements = value;
+  switch (value) {
+    case "mm":
+      {
+        console.log("to mm");
+        switch (prevDefMeasure) {
+          case "in":
+            console.log("from in");
+            newWidth = wInInch * 25.4;
+            newHeight = hInInch * 25.4;
+            newPadWidth = pagePaddingHor * 25.4;
+            newPadHeight = pagePaddingVert * 25.4;
+            break;
+          case "cm":
+            console.log("from cm");
+            newWidth = wInCm / 0.1;
+            newHeight = hInCm / 0.1;
+            newPadWidth = pagePaddingHor / 0.1;
+            newPadHeight = pagePaddingVert / 0.1;
+            break;
+        }
+      }
+      break;
+    case "in":
+      {
+        console.log("to in");
+        switch (prevDefMeasure) {
+          case "mm":
+            console.log("from mm");
+            newWidth = wInMm / 25.4;
+            newHeight = hInMm / 25.4;
+            newPadWidth = pagePaddingHor / 25.4;
+            newPadHeight = pagePaddingVert / 25.4;
+            break;
+          case "cm":
+            console.log("from cm");
+            newWidth = wInCm / 2.54;
+            newHeight = hInCm / 2.54;
+            newPadWidth = pagePaddingHor / 2.54;
+            newPadHeight = pagePaddingVert / 2.54;
+            break;
+        }
+      }
+      break;
+    case "cm":
+      {
+        console.log("to cm");
+        switch (prevDefMeasure) {
+          case "in":
+            console.log("from in");
+            newWidth = wInInch * 2.54;
+            newHeight = hInInch * 2.54;
+            newPadWidth = pagePaddingHor * 2.54;
+            newPadHeight = pagePaddingVert * 2.54;
+            break;
+          case "mm":
+            console.log("from mm");
+            newWidth = wInMm * 0.1;
+            newHeight = hInMm * 0.1;
+            newPadWidth = pagePaddingHor * 0.1;
+            newPadHeight = pagePaddingVert * 0.1;
+            break;
+        }
+      }
+      break;
+    default:
+      console.log("def");
+      newWidth = 8.5;
+      newHeight = 11;
+      newPadWidth = 1;
+      newPadHeight = 1;
+      userDefMeasurements = "in";
+      break;
+  }
+  page.style.height = `${newHeight}${value}`;
+  page.style.minHeight = `${newHeight}${value}`;
+  page.style.maxHeight = `${newHeight}${value}`;
+  page.style.width = `${newWidth}${value}`;
+  page.style.minWidth = `${newWidth}${value}`;
+  page.style.maxWidth = `${newWidth}${value}`;
+  page.style.padding = `${newPadHeight}${value} ${newPadWidth}${value}`;
+  pagePaddingHor = newWidth;
+  pagePaddingVert = newHeight;
+  prevDefMeasure = value;
+  // Create new measurement side bar and top bar when adjusting measurement values
+  // createMeasurements(newHeight, newWidth);
+  placeHandles();
+  createRedLines();
 });
 
 window.addEventListener("DOMContentLoaded", initialize);

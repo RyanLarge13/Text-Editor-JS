@@ -101,19 +101,21 @@ class Editor {
 
   createNewQuote(styles) {
     const newQuote = document.createElement("blockquote");
+    const p = document.createElement("p");
+    newQuote.appendChild(p);
     this.page.appendChild(newQuote);
     const newTextBuffer = {
       type: "blockquote",
-      DOMNode: newQuote,
+      DOMNode: p,
       buffer: new Buffer(),
       styles: styles,
       children: [],
-      parent: this.page,
+      parent: newQuote,
     };
     if (styles) {
-      Object.assign(newQuote.style, styles);
+      Object.assign(p.style, styles);
     }
-    newQuote.addEventListener("click", this.clickHandler);
+    p.addEventListener("click", this.clickHandler);
     this.print(false);
     this.elements.push(newTextBuffer);
     this.length += 1;
