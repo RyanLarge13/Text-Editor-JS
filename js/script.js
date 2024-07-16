@@ -18,6 +18,7 @@ let pagePaddingHor = 1.0;
 
 const page = document.getElementById("text-editor");
 const toolbar = document.getElementById("toolbar-btn-container");
+const header = document.querySelector("header");
 const editor = new Editor(page);
 const myToolbar = new Toolbar();
 const fontSizePicker = document.getElementById("font-size");
@@ -34,6 +35,9 @@ const topRed = document.querySelector(".top-red-line");
 const bottomRed = document.querySelector(".bottom-red-line");
 const leftRed = document.querySelector(".left-red-line");
 const rightRed = document.querySelector(".right-red-line");
+const pageWidthHeightPadContainer = document.querySelector(
+  ".page-width-height-padding"
+);
 const pageWidthInput = document.getElementById("page-width");
 const pageHeightInput = document.getElementById("page-height");
 const pagePaddingWidthInput = document.getElementById(
@@ -69,8 +73,42 @@ const codeBtn = myToolbar.getBtn("code-btn");
 const linkBtn = myToolbar.getBtn("link-btn");
 const restDemsBtn = myToolbar.getBtn("reset-dems");
 
+// Initialization calls for mobile device
+const initializeForMobile = () => {
+  // For now update styles in js later switch to css
+  pageWidthHeightPadContainer.style.display = "none";
+  // const headerHeight = header.getBoundingClientRect().height;
+  // page.style.height = `calc(100vh - ${headerHeight}px)`;
+  page.style.height = `calc(100vh - ${125}px)`;
+  page.style.minHeight = `calc(100vh - ${125}px)`;
+  page.style.maxHeight = `calc(100vh - ${125}px)`;
+  document.querySelector("nav").style.display = "none";
+  document.querySelector(".title").style.flex = 1;
+  page.style.marginTop = "0px";
+  page.style.marginBottom = "0px";
+  page.style.width = `100vw`;
+  page.style.minWidth = `100vw`;
+  page.style.maxWidth = `100vw`;
+  page.style.padding = "0.25in";
+  toolbar.style.overflowX = "auto";
+  toolbar.style.flexWrap = "nowrap";
+  toolbar.style.gap = "10px";
+  topMeasure.style.display = "none";
+  sideMeasure.style.display = "none";
+  handleLeftTop.style.display = "none";
+  handleRightTop.style.display = "none";
+  document.querySelector(".side-measure-container").style.display = "none";
+  header.style.paddingLeft = "10px";
+  header.style.paddingRight = "10px";
+  header.style.height = "125px";
+};
+
 // Initialization calls
 const initialize = () => {
+  const isMobileDevice = /Mobi|Android/i.test(navigator.userAgent);
+  if (isMobileDevice) {
+    return initializeForMobile();
+  }
   page.focus({ preventScroll: true });
   myToolbar.addBtns(["left"]);
   dpi = document.querySelector(".dpi-calc").offsetWidth;

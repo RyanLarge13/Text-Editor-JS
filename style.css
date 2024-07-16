@@ -493,7 +493,16 @@ nav ul li {
 #text-editor {
   margin: 100px 0 75px 0;
   /* padding: 1in; */
-  word-break: break-all;
+  /* word-break: break-all;
+    break all words because of:
+    1.
+    2.
+  */
+  /* Don't break words because of:
+  1.
+  2.
+   */
+  word-break: keep-all;
   word-wrap: normal;
   background-color: #fff;
   color: #000;
