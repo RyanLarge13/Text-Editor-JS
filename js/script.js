@@ -7,6 +7,7 @@ TODO:
 1. Make padding width dynamic. We need to dynamically adjust the handles when updating the padding of the page manually
 2. Fix width on new quote!!
 3. Create a notification system to notify users of errors in input
+4. Create hidden input to focus mobile phones and pull up keyboard. This is the only hack I can think of
 */
 
 let dpi;
@@ -101,6 +102,12 @@ const initializeForMobile = () => {
   header.style.paddingLeft = "10px";
   header.style.paddingRight = "10px";
   header.style.height = "125px";
+  const newInput = document.createElement("input");
+  newInput.style.position = "absolute";
+  newInput.style.zIndex = "-1";
+  page.appendChild(newInput);
+  newInput.focus();
+  page.removeChild(newInput);
 };
 
 // Initialization calls
