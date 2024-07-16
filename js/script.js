@@ -45,7 +45,6 @@ const pagePaddingHeightInput = document.getElementById(
 const userMeasurementSelect = document.getElementById("measurement-select");
 
 const printBtn = myToolbar.getBtn("print");
-
 const boldBtn = myToolbar.getBtn("b");
 const italicBtn = myToolbar.getBtn("i");
 const underlineBtn = myToolbar.getBtn("u");
@@ -68,10 +67,12 @@ const videoBtn = myToolbar.getBtn("video-btn");
 const quoteBtn = myToolbar.getBtn("quote-btn");
 const codeBtn = myToolbar.getBtn("code-btn");
 const linkBtn = myToolbar.getBtn("link-btn");
+const restDemsBtn = myToolbar.getBtn("reset-dems");
 
 // Initialization calls
 const initialize = () => {
   page.focus({ preventScroll: true });
+  myToolbar.addBtns(["left"]);
   dpi = document.querySelector(".dpi-calc").offsetWidth;
   const height = dpi * 11;
   const width = dpi * 8.5;
@@ -90,6 +91,7 @@ const initialize = () => {
 };
 
 const createRedLines = () => {
+  // Don't forget to add most of these styles to your style sheet rather than setting them here in script
   // top
   topRed.style.width = "100%";
   topRed.style.borderTop = "1px solid rgba(255, 0, 0, 0.1)";
@@ -226,6 +228,11 @@ const generateNewStyles = (type) => {
       fontSizePicker.value = "12";
       currentStyles.fontSize = "12px";
       currentStyles.textAlign = "left";
+      const leftBtnOn = myToolbar.checkBtnStyle("left");
+      if (!leftBtnOn) {
+        myToolbar.addBtns(["left"]);
+      }
+      myToolbar.removeBtns(["right", "center"]);
     }
     return currentStyles;
   }
@@ -310,6 +317,8 @@ page.addEventListener("keydown", (e) => {
       break;
     case "ArrowDown":
       moveArrowDown(gapBuffer);
+      break;
+    case "Escape":
       break;
     case "Tab":
       gapBuffer.insert(
@@ -501,7 +510,8 @@ headings.addEventListener("change", (e) => {
 });
 
 boldBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns(["bold"]);
+  const btnOn = myToolbar.checkBtnStyle("bold");
+  btnOn ? myToolbar.removeBtns(["bold"]) : myToolbar.addBtns(["bold"]);
   const stylesToAdd = editor.getCurrentStyles();
   if (stylesToAdd.fontWeight === 600) {
     stylesToAdd.fontWeight = "normal";
@@ -517,7 +527,8 @@ boldBtn.addEventListener("click", () => {
 });
 
 italicBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns(["italic"]);
+  const btnOn = myToolbar.checkBtnStyle("italic");
+  btnOn ? myToolbar.removeBtns(["italic"]) : myToolbar.addBtns(["italic"]);
   const stylesToAdd = editor.getCurrentStyles();
   if (stylesToAdd.fontStyle === "italic") {
     stylesToAdd.fontStyle = "normal";
@@ -533,7 +544,10 @@ italicBtn.addEventListener("click", () => {
 });
 
 underlineBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns(["underline"]);
+  const btnOn = myToolbar.checkBtnStyle("underline");
+  btnOn
+    ? myToolbar.removeBtns(["underline"])
+    : myToolbar.addBtns(["underline"]);
   const stylesToAdd = editor.getCurrentStyles();
   if (stylesToAdd.textDecoration === "underline") {
     stylesToAdd.textDecoration = "normal";
@@ -549,7 +563,10 @@ underlineBtn.addEventListener("click", () => {
 });
 
 strikeThroughBtn.addEventListener("click", () => {
-  myToolbar.toggleBtns(["line-through"]);
+  const btnOn = myToolbar.checkBtnStyle("line-through");
+  btnOn
+    ? myToolbar.removeBtns(["line-through"])
+    : myToolbar.addBtns(["line-through"]);
   const stylesToAdd = editor.getCurrentStyles();
   if (stylesToAdd.textDecoration === "line-through") {
     stylesToAdd.textDecoration = "normal";
@@ -565,46 +582,31 @@ strikeThroughBtn.addEventListener("click", () => {
 });
 
 leftBtn.addEventListener("click", () => {
-  const btnStates = myToolbar.getBtnStates();
-  if (btnStates.length > 0) {
-    const isActive = btnStates.includes("left");
-    if (isActive) {
-      page.focus({ preventScroll: true });
-      return;
-    }
+  const btnOn = myToolbar.checkBtnStyle("left");
+  if (!btnOn) {
+    myToolbar.addBtns(["left"]);
   }
-  myToolbar.toggleBtns(["left"]);
   myToolbar.removeBtns(["right", "center"]);
   editor.updateBufferStyle({ textAlign: "left" });
   page.focus({ preventScroll: true });
 });
 
 centerBtn.addEventListener("click", () => {
-  const btnStates = myToolbar.getBtnStates();
-  if (btnStates.length > 0) {
-    const isActive = btnStates.includes("center");
-    if (isActive) {
-      page.focus({ preventScroll: true });
-      return;
-    }
+  const btnOn = myToolbar.checkBtnStyle("center");
+  if (!btnOn) {
+    myToolbar.addBtns(["center"]);
   }
-  myToolbar.toggleBtns(["center"]);
   myToolbar.removeBtns(["left", "right"]);
   editor.updateBufferStyle({ textAlign: "center" });
   page.focus({ preventScroll: true });
 });
 
 rightBtn.addEventListener("click", () => {
-  const btnStates = myToolbar.getBtnStates();
-  if (btnStates.length > 0) {
-    const isActive = btnStates.includes("right");
-    if (isActive) {
-      page.focus({ preventScroll: true });
-      return;
-    }
+  const btnOn = myToolbar.checkBtnStyle("right");
+  if (!btnOn) {
+    myToolbar.addBtns(["right"]);
   }
-  myToolbar.toggleBtns(["right"]);
-  myToolbar.removeBtns(["center", "left"]);
+  myToolbar.removeBtns(["left", "center"]);
   editor.updateBufferStyle({ textAlign: "right" });
   page.focus({ preventScroll: true });
 });
@@ -1197,6 +1199,33 @@ userMeasurementSelect.addEventListener("change", (e) => {
   // Why does this not seem to work properly when i regenerate the handle styles? HMMMMMMMMMMMMMMMMMMMMMMM
   // placeHandles();
   // createRedLines();
+});
+
+restDemsBtn.addEventListener("click", () => {
+  measurementUnit = "in";
+  userMeasurementSelect.value = "in";
+  pagePaddingHeightInput.value = 1.0;
+  pagePaddingWidthInput.value = 1.0;
+  pageWidthInput.value = 8.5;
+  pageHeightInput.value = 11.0;
+  pagePaddingHor = 1.0;
+  pagePaddingVert = 1.0;
+  // Everything below this line should not be repeated and instead placed into it's own function to be
+  // called here and at script initialization
+  const height = dpi * 11;
+  const width = dpi * 8.5;
+  // const rect = page.getBoundingClientRect();
+  // page.style.marginTop = `${toolbar.offsetHeight}px`;
+  page.style.height = `${height}px`;
+  page.style.minHeight = `${height}px`;
+  page.style.maxHeight = `${height}px`;
+  page.style.width = `${width}px`;
+  page.style.minWidth = `${width}px`;
+  page.style.maxWidth = `${width}px`;
+  page.style.padding = `${pagePaddingVert}${measurementUnit} ${pagePaddingHor}${measurementUnit}`;
+  createMeasurements(height, width);
+  placeHandles();
+  createRedLines();
 });
 
 window.addEventListener("DOMContentLoaded", initialize);

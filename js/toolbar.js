@@ -1,6 +1,5 @@
 class Toolbar {
   constructor() {
-    this.toggles = [];
     this.allBtns = document.querySelectorAll("toolbar-btn");
   }
 
@@ -9,7 +8,7 @@ class Toolbar {
     return btn;
   }
 
-  styleActiveBtns(btn, toggle) {
+  styleBtn(btn, toggle) {
     const theBtn = document.querySelector(`.${btn}`);
     if (!theBtn) {
       return;
@@ -24,43 +23,23 @@ class Toolbar {
 
   removeBtns(btns) {
     btns.forEach((btn) => {
-      const newToggles = this.toggles.filter((aBtn) => aBtn !== btn);
-      this.toggles = newToggles;
-      this.styleActiveBtns(btn, false);
+      this.styleBtn(btn, false);
     });
   }
 
   addBtns(btns) {
     btns.forEach((btn) => {
-      this.toggles.push(btn);
-      this.styleActiveBtns(btn, true);
+      this.styleBtn(btn, true);
     });
   }
 
-  toggleBtns(btns) {
-    btns.forEach((btn) => {
-      if (this.toggles.length < 1) {
-        this.toggles.push(btn);
-        this.styleActiveBtns(btn, true);
-        return true;
-      }
-      const contains = this.toggles.includes(btn);
-      if (contains) {
-        const newToggles = this.toggles.filter((aBtn) => aBtn !== btn);
-        this.toggles = newToggles;
-        this.styleActiveBtns(btn, false);
-        return false;
-      }
-      if (!contains) {
-        this.toggles.push(btn);
-        this.styleActiveBtns(btn, true);
-        return true;
-      }
-    });
-  }
-
-  getBtnStates() {
-    return this.toggles;
+  checkBtnStyle(btn) {
+    const theBtn = document.querySelector(`.${btn}`);
+    if (theBtn.classList.contains("active-btn")) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
