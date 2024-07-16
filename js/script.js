@@ -12,7 +12,7 @@ TODO:
 let dpi;
 let indent = 0;
 let lastIndent = true;
-let userDefMeasurements = "in";
+let measurementUnit = "in";
 let pagePaddingVert = 1.0;
 let pagePaddingHor = 1.0;
 
@@ -83,7 +83,7 @@ const initialize = () => {
   page.style.width = `${width}px`;
   page.style.minWidth = `${width}px`;
   page.style.maxWidth = `${width}px`;
-  page.style.padding = `${pagePaddingVert}${userDefMeasurements} ${pagePaddingHor}${userDefMeasurements}`;
+  page.style.padding = `${pagePaddingVert}${measurementUnit} ${pagePaddingHor}${measurementUnit}`;
   createMeasurements(height, width);
   placeHandles();
   createRedLines();
@@ -186,8 +186,8 @@ const placeHandles = () => {
   const pageTop = pageRect.top;
   // const pageBottom = pageRect.bottom;
   sideMeasure.style.top = `${pageTop}px`;
-  handleLeftTop.style.left = `calc(${pageLeft}px + ${pagePaddingHor}${userDefMeasurements})`;
-  handleRightTop.style.left = `calc(${pageRight}px - ${pagePaddingHor}${userDefMeasurements})`;
+  handleLeftTop.style.left = `calc(${pageLeft}px + ${pagePaddingHor}${measurementUnit})`;
+  handleRightTop.style.left = `calc(${pageRight}px - ${pagePaddingHor}${measurementUnit})`;
   // handleTopLeft.style.top = `calc(${pageTop}px + 1in)`;
   // handleBottomLeft.style.top = `calc(${pageBottom}px - 1in)`;
 };
@@ -844,9 +844,13 @@ handleLeftTop.addEventListener("dragend", (e) => {
   // find a way to snap handle to nearest 8th
   const deltaX = x - beginningX;
   const computedPadding = window.getComputedStyle(page);
+  const multiplier =
+    measurementUnit === "in" ? 1 : measurementUnit === "cm" ? 2.54 : 25.4;
   const additionalPadding =
-    (parseFloat(computedPadding.paddingLeft) + deltaX) / dpi;
-  page.style.paddingLeft = `${Math.round(additionalPadding * 8) / 8}in`;
+    ((parseFloat(computedPadding.paddingLeft) + deltaX) / dpi) * multiplier;
+  console.log(additionalPadding);
+  page.style.paddingLeft = `${additionalPadding}${measurementUnit}`;
+  pagePaddingWidthInput.value = additionalPadding;
   page.focus({ preventScroll: true });
 });
 
@@ -867,9 +871,12 @@ handleRightTop.addEventListener("dragend", (e) => {
   // find a way to snap handle to nearest 8th
   const deltaX = x - beginningX;
   const computedPadding = window.getComputedStyle(page);
+  const multiplier =
+    measurementUnit === "in" ? 1 : measurementUnit === "cm" ? 2.54 : 25.4;
   const additionalPadding =
-    (parseFloat(computedPadding.paddingRight) - deltaX) / dpi;
-  page.style.paddingRight = `${Math.round(additionalPadding * 8) / 8}in`;
+    ((parseFloat(computedPadding.paddingRight) - deltaX) / dpi) * multiplier;
+  page.style.paddingRight = `${additionalPadding}${measurementUnit}`;
+  pagePaddingWidthInput.value = additionalPadding;
   page.focus({ preventScroll: true });
 });
 
@@ -1012,9 +1019,9 @@ pageWidthInput.addEventListener("change", (e) => {
     pageWidthInput.value = pageWidthInit;
     return;
   }
-  page.style.width = `${value}in`;
-  page.style.maxWidth = `${value}in`;
-  page.style.minWidth = `${value}in`;
+  page.style.width = `${value}${measurementUnit}`;
+  page.style.maxWidth = `${value}${measurementUnit}`;
+  page.style.minWidth = `${value}${measurementUnit}`;
   placeHandles();
   createRedLines();
 });
@@ -1034,9 +1041,9 @@ pageHeightInput.addEventListener("change", (e) => {
     pageHeightInput.value = pageHeightInit;
     return;
   }
-  page.style.height = `${value}in`;
-  page.style.maxHeight = `${value}in`;
-  page.style.minHeight = `${value}in`;
+  page.style.height = `${value}${measurementUnit}`;
+  page.style.maxHeight = `${value}${measurementUnit}`;
+  page.style.minHeight = `${value}${measurementUnit}`;
   // create adjustable margin to react as though you were dragging the red lines
   // const pageStyles = window.getComputedStyle(page);
   // const marginTop = parseFloat(pageStyles.marginTop);
@@ -1061,8 +1068,8 @@ pagePaddingWidthInput.addEventListener("change", (e) => {
     pagePaddingWidthInput.value = pagePadWidthInit;
     return;
   }
-  page.style.paddingLeft = `${value}in`;
-  page.style.paddingRight = `${value}in`;
+  page.style.paddingLeft = `${value}${measurementUnit}`;
+  page.style.paddingRight = `${value}${measurementUnit}`;
   pagePaddingWidthInput.value = value;
   pagePaddingHor = value;
   placeHandles();
@@ -1078,17 +1085,25 @@ userMeasurementSelect.addEventListener("change", (e) => {
   const pageStyles = window.getComputedStyle(page);
   const currentWidth = parseFloat(pageStyles.width).toFixed(1);
   const currentHeight = parseFloat(pageStyles.height).toFixed(1);
-  const wInInch = currentWidth * dpi;
-  const wInMm = currentWidth * dpi * 25.4;
-  const wInCm = currentWidth * dpi * 2.54;
-  const hInInch = currentHeight * dpi;
-  const hInMm = currentHeight * dpi * 25.4;
-  const hInCm = currentHeight * dpi * 2.54;
+  const currentPaddingHeight = parseFloat(pageStyles.paddingTop).toFixed(1);
+  const currentPaddingWidth = parseFloat(pageStyles.paddingLeft).toFixed(1);
+  const wInInch = currentWidth / dpi;
+  const wInMm = (currentWidth / dpi) * 25.4;
+  const wInCm = (currentWidth / dpi) * 2.54;
+  const hInInch = currentHeight / dpi;
+  const hInMm = (currentHeight / dpi) * 25.4;
+  const hInCm = (currentHeight / dpi) * 2.54;
+  const pHInInch = currentPaddingHeight / dpi;
+  const pHInMm = (currentPaddingHeight / dpi) * 25.4;
+  const pHInCm = (currentPaddingHeight / dpi) * 2.54;
+  const pWInInch = currentPaddingWidth / dpi;
+  const pWInMm = (currentPaddingWidth / dpi) * 25.4;
+  const pWInCm = (currentPaddingWidth / dpi) * 2.54;
   let newWidth;
   let newHeight;
   let newPadWidth;
   let newPadHeight;
-  userDefMeasurements = value;
+  measurementUnit = value;
   switch (value) {
     case "mm":
       {
@@ -1098,15 +1113,15 @@ userMeasurementSelect.addEventListener("change", (e) => {
             console.log("from in");
             newWidth = wInInch * 25.4;
             newHeight = hInInch * 25.4;
-            newPadWidth = pagePaddingHor * 25.4;
-            newPadHeight = pagePaddingVert * 25.4;
+            newPadWidth = pWInInch * 25.4;
+            newPadHeight = pHInInch * 25.4;
             break;
           case "cm":
             console.log("from cm");
             newWidth = wInCm / 0.1;
             newHeight = hInCm / 0.1;
-            newPadWidth = pagePaddingHor / 0.1;
-            newPadHeight = pagePaddingVert / 0.1;
+            newPadWidth = pWInCm / 0.1;
+            newPadHeight = pHInCm / 0.1;
             break;
         }
       }
@@ -1119,15 +1134,15 @@ userMeasurementSelect.addEventListener("change", (e) => {
             console.log("from mm");
             newWidth = wInMm / 25.4;
             newHeight = hInMm / 25.4;
-            newPadWidth = pagePaddingHor / 25.4;
-            newPadHeight = pagePaddingVert / 25.4;
+            newPadWidth = pWInMm / 25.4;
+            newPadHeight = pHInMm / 25.4;
             break;
           case "cm":
             console.log("from cm");
             newWidth = wInCm / 2.54;
             newHeight = hInCm / 2.54;
-            newPadWidth = pagePaddingHor / 2.54;
-            newPadHeight = pagePaddingVert / 2.54;
+            newPadWidth = pWInCm / 2.54;
+            newPadHeight = pHInCm / 2.54;
             break;
         }
       }
@@ -1140,15 +1155,15 @@ userMeasurementSelect.addEventListener("change", (e) => {
             console.log("from in");
             newWidth = wInInch * 2.54;
             newHeight = hInInch * 2.54;
-            newPadWidth = pagePaddingHor * 2.54;
-            newPadHeight = pagePaddingVert * 2.54;
+            newPadWidth = pWInInch * 2.54;
+            newPadHeight = pHInInch * 2.54;
             break;
           case "mm":
             console.log("from mm");
             newWidth = wInMm * 0.1;
             newHeight = hInMm * 0.1;
-            newPadWidth = pagePaddingHor * 0.1;
-            newPadHeight = pagePaddingVert * 0.1;
+            newPadWidth = pWInMm * 0.1;
+            newPadHeight = pHInMm * 0.1;
             break;
         }
       }
@@ -1159,9 +1174,14 @@ userMeasurementSelect.addEventListener("change", (e) => {
       newHeight = 11;
       newPadWidth = 1;
       newPadHeight = 1;
-      userDefMeasurements = "in";
+      measurementUnit = "in";
       break;
   }
+  console.log(newWidth, value);
+  pageWidthInput.value = newWidth;
+  pageHeightInput.value = newHeight;
+  pagePaddingHeightInput.value = newPadHeight;
+  pagePaddingWidthInput.value = newPadWidth;
   page.style.height = `${newHeight}${value}`;
   page.style.minHeight = `${newHeight}${value}`;
   page.style.maxHeight = `${newHeight}${value}`;
@@ -1172,10 +1192,11 @@ userMeasurementSelect.addEventListener("change", (e) => {
   pagePaddingHor = newWidth;
   pagePaddingVert = newHeight;
   prevDefMeasure = value;
-  // Create new measurement side bar and top bar when adjusting measurement values
+  // Create new measurement side bar and top bar when adjusting measurement values???????
   // createMeasurements(newHeight, newWidth);
-  placeHandles();
-  createRedLines();
+  // Why does this not seem to work properly when i regenerate the handle styles? HMMMMMMMMMMMMMMMMMMMMMMM
+  // placeHandles();
+  // createRedLines();
 });
 
 window.addEventListener("DOMContentLoaded", initialize);
