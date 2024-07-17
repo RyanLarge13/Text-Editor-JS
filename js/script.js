@@ -104,26 +104,6 @@ const initializeForMobile = () => {
   header.style.paddingLeft = "10px";
   header.style.paddingRight = "10px";
   header.style.height = "125px";
-  const newInput = document.createElement("input");
-  newInput.style.position = "absolute";
-  newInput.style.top = "0";
-  newInput.style.bottom = "0";
-  newInput.style.right = "0";
-  newInput.style.left = "0";
-  newInput.style.border = "none";
-  newInput.style.outline = "none";
-  newInput.style.backgroundColor = "transparent";
-  newInput.style.width = `100vw`;
-  newInput.style.minWidth = `100vw`;
-  newInput.style.maxWidth = `100vw`;
-  newInput.style.height = `calc(100vh - ${125}px)`;
-  newInput.style.minHeight = `calc(100vh - ${125}px)`;
-  newInput.style.maxHeight = `calc(100vh - ${125}px)`;
-  newInput.addEventListener("focus", (e) => {
-    // e.preventDefault();
-    page.focus({ preventScroll: true });
-  });
-  page.appendChild(newInput);
 };
 
 // Initialization calls
@@ -839,7 +819,7 @@ linkBtn.addEventListener("click", (e) => {
   const linkInput = document.getElementById("link-input");
   const newInput = document.createElement("input");
   const rect = linkBtn.getBoundingClientRect();
-  myToolbar.toggleBtns(["link-btn"]);
+  myToolbar.addBtns(["link-btn"]);
   linkInput.appendChild(newInput);
   linkInput.classList.add("show");
   linkInput.style.top = `${rect.top + rect.height}px`;
@@ -858,7 +838,7 @@ linkBtn.addEventListener("click", (e) => {
       editor.currentTextBuffer.DOMNode.target = "_blank";
       linkInput.value = "";
       linkInput.classList.remove("show");
-      myToolbar.toggleBtns(["link-btn"]);
+      myToolbar.removeBtns(["link-btn"]);
       page.focus({ preventScroll: true });
     }
   });
