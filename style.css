@@ -20,12 +20,53 @@ body::-webkit-scrollbar {
   width: 5px;
 }
 
+.no-scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+
 body::-webkit-scrollbar-track {
   background-color: rgb(238, 239, 255);
 }
 
 body::-webkit-scrollbar-thumb {
   background-color: #999;
+}
+
+.wrapper {
+  position: relative;
+  border-radius: 1000px;
+}
+
+.wrapper::before,
+.wrapper::after {
+  content: "";
+  width: 40px;
+  pointer-events: none;
+  position: absolute;
+  border-radius: 1000px;
+}
+
+.wrapper::before {
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  background: linear-gradient(
+    to right,
+    rgba(238, 239, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
+  z-index: 999;
+}
+
+.wrapper::after {
+  top: 0;
+  bottom: 0;
+  right: -2px;
+  background: linear-gradient(
+    to left,
+    rgba(238, 239, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
 }
 
 .top-measure-container {

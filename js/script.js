@@ -94,6 +94,8 @@ const initializeForMobile = () => {
   toolbar.style.overflowX = "auto";
   toolbar.style.flexWrap = "nowrap";
   toolbar.style.gap = "10px";
+  toolbar.style.boxShadow = "inset 2px 2px 20px 0 rgba(0,0,0,0.1)";
+  toolbar.classList.add("no-scroll-bar");
   topMeasure.style.display = "none";
   sideMeasure.style.display = "none";
   handleLeftTop.style.display = "none";
@@ -104,10 +106,24 @@ const initializeForMobile = () => {
   header.style.height = "125px";
   const newInput = document.createElement("input");
   newInput.style.position = "absolute";
-  newInput.style.zIndex = "-1";
+  newInput.style.top = "0";
+  newInput.style.bottom = "0";
+  newInput.style.right = "0";
+  newInput.style.left = "0";
+  newInput.style.border = "none";
+  newInput.style.outline = "none";
+  newInput.style.backgroundColor = "transparent";
+  newInput.style.width = `100vw`;
+  newInput.style.minWidth = `100vw`;
+  newInput.style.maxWidth = `100vw`;
+  newInput.style.height = `calc(100vh - ${125}px)`;
+  newInput.style.minHeight = `calc(100vh - ${125}px)`;
+  newInput.style.maxHeight = `calc(100vh - ${125}px)`;
+  newInput.addEventListener("focus", (e) => {
+    // e.preventDefault();
+    page.focus({ preventScroll: true });
+  });
   page.appendChild(newInput);
-  newInput.focus();
-  page.removeChild(newInput);
 };
 
 // Initialization calls

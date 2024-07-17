@@ -58,115 +58,118 @@
         </nav>
       </div>
     </div>
-    <div class="toolbar-btn-container" id="toolbar-btn-container">
-      <button class="toolbar-btn">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
-      <button class="toolbar-btn"><i class="fa-solid fa-rotate-left"></i></button>
-      <button class="toolbar-btn">
-        <i class="fa-solid fa-rotate-right"></i>
-      </button>
-      <button class="toolbar-btn" id="print">
-        <i class="fa-solid fa-print"></i>
-      </button>
-      <button class="toolbar-btn">
-        <i class="fa-solid fa-spell-check"></i>
-      </button>
-      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
-      <button class="toolbar-btn left" id="left"><i class="fa-solid fa-align-left"></i></button>
-      <button class="toolbar-btn center" id="center">
-        <i class="fa-solid fa-align-center"></i>
-      </button>
-      <button class="toolbar-btn right" id="right"><i class="fa-solid fa-align-right"></i></button>
-      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
-      <select name="headings" id="headings">
-        <option value="title">Title</option>
-        <option value="subtitle">Subtitle</option>
-        <option value="h1">H1</option>
-        <option value="h2">H2</option>
-        <option value="h3">H3</option>
-        <option value="h4">H4</option>
-        <option value="h5">H5</option>
-        <option value="h6">H6</option>
-        <option value="small">Small</option>
-        <option value="normal" selected>Normal</option>
-        <option value="large">Large</option>
-      </select>
-      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
-      <button class="toolbar-btn" id="minus-font"><i class="fa-solid fa-minus"></i></button>
-      <select name="font-size" id="font-size">
-        <option value="8">8</option>
-        <option value="10">10</option>
-        <option value="12" selected>12</option>
-        <option value="14">14</option>
-        <option value="16">16</option>
-        <option value="18">18</option>
-        <option value="20">20</option>
-        <option value="22">22</option>
-        <option value="24">24</option>
-        <option value="26">26</option>
-        <option value="28">28</option>
-        <option value="30">30</option>
-        <option value="32">32</option>
-        <option value="34">34</option>
-        <option value="36">36</option>
-        <option value="38">38</option>
-        <option value="40">40</option>
-      </select>
-      <button class="toolbar-btn" id="plus-font"><i class="fa-solid fa-plus"></i></button>
-      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
-      <select name="font-fam" id="font-fam">
-        <option value="Andale Mono">Andale Mono</option>
-        <option value="Arial" selected>Arial</option>
-        <option value="Arial Black">Arial Black</option>
-        <option value="Comic Sans MS">Comic Sans MS</option>
-        <option value="Courier">Courier</option>
-        <option value="Courier New">Courier New</option>
-        <option value="Geneva">Geneva</option>
-        <option value="Georgia">Georgia</option>
-        <option value="Helvetica">Helvetica</option>
-        <option value="Impact">Impact</option>
-        <option value="Lucida Console">Lucida Console</option>
-        <option value="Lucida Sans Unicode">Lucida Sans Unicode</option>
-        <option value="Monaco">Monaco</option>
-        <option value="Palatino">Palatino</option>
-        <option value="Palatino Linotype">Palatino Linotype</option>
-        <option value="Tahoma">Tahoma</option>
-        <option value="Times">Times</option>
-        <option value="Times New Roman">Times New Roman</option>
-        <option value="Trebuchet MS">Trebuchet MS</option>
-        <option value="Verdana">Verdana</option>
-      </select>
-      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
-      <!-- <button class="toolbar-btn" id="h1"><i class="fa-solid fa-heading"></i></button> -->
-      <button class="toolbar-btn bold" id="b"><i class="fa-solid fa-bold"></i></button>
-      <button class="toolbar-btn italic" id="i"><i class="fa-solid fa-italic"></i></button>
-      <button class="toolbar-btn underline" id="u"><i class="fa-solid fa-underline"></i></button>
-      <button class="toolbar-btn line-through" id="st">
-        <i class="fa-solid fa-strikethrough"></i>
-      </button>
-      <button class="toolbar-btn font-color" id="font-color">
-        <i class="fa-solid fa-font"></i>
-        <div class="font-color-color" id="font-color-color"></div>
-      </button>
-      <button class="toolbar-btn highlight" id="highlight">
-        <i class="fa-solid fa-highlighter"></i>
-        <div class="highlight-color-color" id="highlight-color-color"></div>
-      </button>
-      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
-      <button class="toolbar-btn" id="ul"><i class="fa-solid fa-list"></i></button>
-      <button class="toolbar-btn" id="ol"><i class="fa-solid fa-list-ol"></i></button>
-      <button class="toolbar-btn" id="check-list"><i class="fa-solid fa-list-check"></i></button>
-      <button class="toolbar-btn" id="tab-in"><i class="fa-solid fa-indent"></i></button>
-      <button class="toolbar-btn" id="tab-out"><i class="fa-solid fa-outdent"></i></button>
-      <button class="toolbar-btn" id="line-height"><i class="fa-solid fa-grip-lines"></i></button>
-      <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
-      <button class="toolbar-btn" id="quote-btn"><i class="fa-solid fa-quote-left"></i></button>
-      <button class="toolbar-btn" id="code-btn"><i class="fa-solid fa-code"></i></button>
-      <button class="toolbar-btn" id="image-btn"><i class="fa-solid fa-image"></i></button>
-      <button class="toolbar-btn" id="video-btn"><i class="fa-solid fa-video"></i></button>
-      <input type="file" id="image-input" accept="image/*" />
-      <button class="toolbar-btn link-btn" id="link-btn"><i class="fa-solid fa-link"></i></button>
+    <div class="wrapper" aria-hidden="true">
+      <div class="toolbar-btn-container" id="toolbar-btn-container">
+        <button class="toolbar-btn">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <button class="toolbar-btn"><i class="fa-solid fa-rotate-left"></i></button>
+        <button class="toolbar-btn">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+        <button class="toolbar-btn" id="print">
+          <i class="fa-solid fa-print"></i>
+        </button>
+        <button class="toolbar-btn">
+          <i class="fa-solid fa-spell-check"></i>
+        </button>
+        <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+        <button class="toolbar-btn left" id="left"><i class="fa-solid fa-align-left"></i></button>
+        <button class="toolbar-btn center" id="center">
+          <i class="fa-solid fa-align-center"></i>
+        </button>
+        <button class="toolbar-btn right" id="right"><i class="fa-solid fa-align-right"></i></button>
+        <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+        <select name="headings" id="headings">
+          <option value="title">Title</option>
+          <option value="subtitle">Subtitle</option>
+          <option value="h1">H1</option>
+          <option value="h2">H2</option>
+          <option value="h3">H3</option>
+          <option value="h4">H4</option>
+          <option value="h5">H5</option>
+          <option value="h6">H6</option>
+          <option value="small">Small</option>
+          <option value="normal" selected>Normal</option>
+          <option value="large">Large</option>
+        </select>
+        <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+        <button class="toolbar-btn" id="minus-font"><i class="fa-solid fa-minus"></i></button>
+        <select name="font-size" id="font-size">
+          <option value="8">8</option>
+          <option value="10">10</option>
+          <option value="12" selected>12</option>
+          <option value="14">14</option>
+          <option value="16">16</option>
+          <option value="18">18</option>
+          <option value="20">20</option>
+          <option value="22">22</option>
+          <option value="24">24</option>
+          <option value="26">26</option>
+          <option value="28">28</option>
+          <option value="30">30</option>
+          <option value="32">32</option>
+          <option value="34">34</option>
+          <option value="36">36</option>
+          <option value="38">38</option>
+          <option value="40">40</option>
+        </select>
+        <button class="toolbar-btn" id="plus-font"><i class="fa-solid fa-plus"></i></button>
+        <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+        <select name="font-fam" id="font-fam">
+          <option value="Andale Mono">Andale Mono</option>
+          <option value="Arial" selected>Arial</option>
+          <option value="Arial Black">Arial Black</option>
+          <option value="Comic Sans MS">Comic Sans MS</option>
+          <option value="Courier">Courier</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Geneva">Geneva</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Helvetica">Helvetica</option>
+          <option value="Impact">Impact</option>
+          <option value="Lucida Console">Lucida Console</option>
+          <option value="Lucida Sans Unicode">Lucida Sans Unicode</option>
+          <option value="Monaco">Monaco</option>
+          <option value="Palatino">Palatino</option>
+          <option value="Palatino Linotype">Palatino Linotype</option>
+          <option value="Tahoma">Tahoma</option>
+          <option value="Times">Times</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Trebuchet MS">Trebuchet MS</option>
+          <option value="Verdana">Verdana</option>
+        </select>
+        <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+        <!-- <button class="toolbar-btn" id="h1"><i class="fa-solid fa-heading"></i></button> -->
+        <button class="toolbar-btn bold" id="b"><i class="fa-solid fa-bold"></i></button>
+        <button class="toolbar-btn italic" id="i"><i class="fa-solid fa-italic"></i></button>
+        <button class="toolbar-btn underline" id="u"><i class="fa-solid fa-underline"></i></button>
+        <button class="toolbar-btn line-through" id="st">
+          <i class="fa-solid fa-strikethrough"></i>
+        </button>
+        <button class="toolbar-btn font-color" id="font-color">
+          <i class="fa-solid fa-font"></i>
+          <div class="font-color-color" id="font-color-color"></div>
+        </button>
+        <button class="toolbar-btn highlight" id="highlight">
+          <i class="fa-solid fa-highlighter"></i>
+          <div class="highlight-color-color" id="highlight-color-color"></div>
+        </button>
+        <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+        <button class="toolbar-btn" id="ul"><i class="fa-solid fa-list"></i></button>
+        <button class="toolbar-btn" id="ol"><i class="fa-solid fa-list-ol"></i></button>
+        <button class="toolbar-btn" id="check-list"><i class="fa-solid fa-list-check"></i></button>
+        <button class="toolbar-btn" id="tab-in"><i class="fa-solid fa-indent"></i></button>
+        <button class="toolbar-btn" id="tab-out"><i class="fa-solid fa-outdent"></i></button>
+        <button class="toolbar-btn" id="line-height"><i class="fa-solid fa-grip-lines"></i></button>
+        <p style="display: inline; margin: 0 5px; color: #999; font-size: 1.25em;">|</p>
+        <button class="toolbar-btn" id="quote-btn"><i class="fa-solid fa-quote-left"></i></button>
+        <button class="toolbar-btn" id="code-btn"><i class="fa-solid fa-code"></i></button>
+        <button class="toolbar-btn" id="image-btn"><i class="fa-solid fa-image"></i></button>
+        <button class="toolbar-btn" id="video-btn"><i class="fa-solid fa-video"></i></button>
+        <input type="file" id="image-input" accept="image/*" />
+        <button class="toolbar-btn link-btn" id="link-btn"><i class="fa-solid fa-link"></i></button>
+
+      </div>
     </div>
     <div class="page-width-height-padding">
       <div>
