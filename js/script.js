@@ -73,6 +73,14 @@ const quoteBtn = myToolbar.getBtn("quote-btn");
 const codeBtn = myToolbar.getBtn("code-btn");
 const linkBtn = myToolbar.getBtn("link-btn");
 const restDemsBtn = myToolbar.getBtn("reset-dems");
+const minusPtb = myToolbar.getBtn("minus-ptb");
+const plusPtb = myToolbar.getBtn("plus-ptb");
+const minusH = myToolbar.getBtn("minus-h");
+const plusH = myToolbar.getBtn("plus-h");
+const minusW = myToolbar.getBtn("minus-w");
+const plusW = myToolbar.getBtn("plus-w");
+const minusPlr = myToolbar.getBtn("minus-plr");
+const plusPlr = myToolbar.getBtn("plus-plr");
 
 // Initialization calls for mobile device
 const initializeForMobile = () => {
@@ -1097,9 +1105,11 @@ leftRed.addEventListener("dragend", (e) => {
 });
 
 let pageWidthInit = 8.5;
+
 pageWidthInput.addEventListener("focus", (e) => {
   pageWidthInit = parseFloat(e.target.value);
 });
+
 pageWidthInput.addEventListener("change", (e) => {
   const value = parseFloat(e.target.value).toFixed(2);
   if (value > 20) {
@@ -1314,6 +1324,112 @@ restDemsBtn.addEventListener("click", () => {
   page.style.maxWidth = `${width}px`;
   page.style.padding = `${pagePaddingVert}${measurementUnit} ${pagePaddingHor}${measurementUnit}`;
   createMeasurements(height, width);
+  placeHandles();
+  createRedLines();
+});
+
+minusPlr.addEventListener("click", () => {
+  const currentVal = pagePaddingWidthInput.value;
+  const addedValue = (parseFloat(currentVal) - 0.1).toFixed(1);
+  if (addedValue <= 0) {
+    return;
+  }
+  page.style.paddingLeft = `${addedValue}${measurementUnit}`;
+  page.style.paddingRight = `${addedValue}${measurementUnit}`;
+  pagePaddingWidthInput.value = addedValue;
+  pagePaddingHor = addedValue;
+  placeHandles();
+});
+
+plusPlr.addEventListener("click", () => {
+  const currentVal = pagePaddingWidthInput.value;
+  const addedValue = (parseFloat(currentVal) + 0.1).toFixed(1);
+  if (addedValue >= 3.1) {
+    return;
+  }
+  page.style.paddingLeft = `${addedValue}${measurementUnit}`;
+  page.style.paddingRight = `${addedValue}${measurementUnit}`;
+  pagePaddingWidthInput.value = addedValue;
+  pagePaddingHor = addedValue;
+  placeHandles();
+});
+
+minusPtb.addEventListener("click", () => {
+  const currentVal = pagePaddingHeightInput.value;
+  const addedValue = (parseFloat(currentVal) - 0.1).toFixed(1);
+  if (addedValue <= 0) {
+    return;
+  }
+  page.style.paddingTop = `${addedValue}${measurementUnit}`;
+  page.style.paddingBottom = `${addedValue}${measurementUnit}`;
+  pagePaddingHeightInput.value = addedValue;
+  pagePaddingVert = addedValue;
+});
+
+plusPtb.addEventListener("click", () => {
+  const currentVal = pagePaddingHeightInput.value;
+  const addedValue = (parseFloat(currentVal) + 0.1).toFixed(1);
+  if (addedValue >= 3.1) {
+    return;
+  }
+  page.style.paddingTop = `${addedValue}${measurementUnit}`;
+  page.style.paddingBottom = `${addedValue}${measurementUnit}`;
+  pagePaddingHeightInput.value = addedValue;
+  pagePaddingVert = addedValue;
+});
+
+minusW.addEventListener("click", () => {
+  const currentVal = pageWidthInput.value;
+  const addedValue = (parseFloat(currentVal) - 0.1).toFixed(1);
+  if (addedValue <= 0) {
+    return;
+  }
+  page.style.width = `${addedValue}${measurementUnit}`;
+  page.style.maxWidth = `${addedValue}${measurementUnit}`;
+  page.style.minWidth = `${addedValue}${measurementUnit}`;
+  pageWidthInput.value = addedValue;
+  placeHandles();
+  createRedLines();
+});
+
+plusW.addEventListener("click", () => {
+  const currentVal = pageWidthInput.value;
+  const addedValue = (parseFloat(currentVal) + 0.1).toFixed(1);
+  if (addedValue <= 0) {
+    return;
+  }
+  page.style.width = `${addedValue}${measurementUnit}`;
+  page.style.maxWidth = `${addedValue}${measurementUnit}`;
+  page.style.minWidth = `${addedValue}${measurementUnit}`;
+  pageWidthInput.value = addedValue;
+  placeHandles();
+  createRedLines();
+});
+
+minusH.addEventListener("click", () => {
+  const currentVal = pageHeightInput.value;
+  const addedValue = (parseFloat(currentVal) - 0.1).toFixed(1);
+  if (addedValue <= 0) {
+    return;
+  }
+  page.style.height = `${addedValue}${measurementUnit}`;
+  page.style.maxHeight = `${addedValue}${measurementUnit}`;
+  page.style.minHeight = `${addedValue}${measurementUnit}`;
+  pageHeightInput.value = addedValue;
+  placeHandles();
+  createRedLines();
+});
+
+plusH.addEventListener("click", () => {
+  const currentVal = pageHeightInput.value;
+  const addedValue = (parseFloat(currentVal) + 0.1).toFixed(1);
+  if (addedValue <= 0) {
+    return;
+  }
+  page.style.height = `${addedValue}${measurementUnit}`;
+  page.style.maxHeight = `${addedValue}${measurementUnit}`;
+  page.style.minHeight = `${addedValue}${measurementUnit}`;
+  pageHeightInput.value = addedValue;
   placeHandles();
   createRedLines();
 });

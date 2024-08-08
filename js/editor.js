@@ -42,7 +42,21 @@ class Editor {
   }
 
   print(withCursor) {
-    const text = this.currentTextBuffer.buffer.print(withCursor);
+    let text = this.currentTextBuffer.buffer.print(withCursor);
+    let index = 0;
+    while (index < this.currentTextBuffer.DOMNode.children.length) {
+      const elem = this.currentTextBuffer.DOMNode.children[index];
+      if (elem.classList.contains("cursor")) {
+        console.log("continue");
+        index++;
+        continue;
+      }
+      console.log("in loop");
+      const childBuffer = this.findElem(elem);
+      text += childBuffer.buffer.print(false);
+      index++;
+    }
+    console.log(text);
     this.currentTextBuffer.DOMNode.innerHTML = text;
   }
 
