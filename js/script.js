@@ -334,6 +334,47 @@ const handleEnter = (type, parentType, gapBuffer) => {
   gapBuffer.insert("\n", gapBuffer.getCurrentPos());
 };
 
+const setStyles = (newStyles) => {
+  const keys = Object.keys(newStyles);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    switch (key) {
+      case "fontWeight": {
+        if (newStyles[key] !== 500) {
+          myToolbar.addBtns(["bold"]);
+        } else {
+          myToolbar.removeBtns(["bold"]);
+        }
+      }
+      case "textAlign": {
+        if (newStyles[key] === "center") {
+          myToolbar.removeBtns(["left", "right"]);
+          myToolbar.addBtns(["center"]);
+        }
+        if (newStyles[key] === "left") {
+          myToolbar.removeBtns(["right", "center"]);
+          myToolbar.addBtns(["left"]);
+        }
+        if (newStyles[key] === "right") {
+          myToolbar.removeBtns(["left", "center"]);
+          myToolbar.addBtns(["right"]);
+        }
+      }
+      case "textDecoration": {
+        if (newStyles[key] === "underline") {
+          myToolbar.removeBtns(["line-through"]);
+          myToolbar.addBtns(["underline"]);
+        } else {
+          myToolbar.addBtns(["line-through"]);
+          myToolbar.removeBtns(["underline"]);
+        }
+      }
+      default:
+        break;
+    }
+  }
+};
+
 page.addEventListener("keydown", (e) => {
   e.preventDefault();
   const key = e.key;
@@ -343,6 +384,8 @@ page.addEventListener("keydown", (e) => {
       const buffSize = gapBuffer.erase(gapBuffer.getCurrentPos());
       if (buffSize === 0) {
         editor.eraseBuff();
+        const newBuffStyles = editor.getCurrentStyles();
+        setStyles(newBuffStyles);
       }
       break;
     case "Control":
@@ -588,7 +631,10 @@ underlineBtn.addEventListener("click", () => {
   const btnOn = myToolbar.checkBtnStyle("underline");
   btnOn
     ? myToolbar.removeBtns(["underline"])
-    : myToolbar.addBtns(["underline"]);
+    : [
+        myToolbar.addBtns(["underline"]),
+        myToolbar.removeBtns(["line-through"]),
+      ];
   const stylesToAdd = editor.getCurrentStyles();
   if (stylesToAdd.textDecoration === "underline") {
     stylesToAdd.textDecoration = "normal";
@@ -607,7 +653,10 @@ strikeThroughBtn.addEventListener("click", () => {
   const btnOn = myToolbar.checkBtnStyle("line-through");
   btnOn
     ? myToolbar.removeBtns(["line-through"])
-    : myToolbar.addBtns(["line-through"]);
+    : [
+        myToolbar.addBtns(["line-through"]),
+        myToolbar.removeBtns(["underline"]),
+      ];
   const stylesToAdd = editor.getCurrentStyles();
   if (stylesToAdd.textDecoration === "line-through") {
     stylesToAdd.textDecoration = "normal";
