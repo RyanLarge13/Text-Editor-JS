@@ -1,5 +1,22 @@
 # Text Editor JS
 
+<img src="/assets/logo.png" alt="logo" />
+
+## Table of contents
+
+[Overview](#overview)
+
+- [Toolbar Class](#toolbar-class)
+- [Editor Class](#editor-class)
+- [Buffer Class](#buffer-class)
+
+[Run The App](#run-the-app)
+
+- [Live Server Install](#live-server-install)
+- [Cloning Repo](#cloning-repo)
+
+ <img src="/assets/Text-Editor-JS.png" alt="app logo" />
+
 Welcome! I want to start by giving a brief intro to this project and why I chose to make it.
 I realized as my journey through learning how to write software progressed that I was getting
 quite tired of hearing advice to NOT re-invent the wheel.
@@ -54,3 +71,37 @@ The buffer class is the heart of performance in this application. It handles all
 and removing text characters and positioning the cursor within the text. Multiple buffers are assigned within the application as the user types depending
 on the formatting and styling they create. The application tries to balance the number of gap buffers for manipulating and rendering text within the application
 but also not allowing a single buffer to get too large as to mitigate against costly array operations especially when the buffer needs to grow in size and copy its elements
+
+## Run the app
+
+This project is 100% vanilla js. To run the application it is as simple as cloning the repo and pull the files into the browser. Or use live server if you are using VS Code.
+
+Font Awesome icons are used to display the toolbar icons within the app. Please, create your own Font Awesome account for free here
+[Font Awesome](https://fontawesome.com/)
+and past your personal url for the script link in index.html so I can keep this app going on gh-pages.
+
+```
+index.html
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="text editor with vanilla js" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="./js/script.js"></script>
+
+  <-- Change this script tag -->
+  <script src="https://kit.fontawesome.com/a673862905.js" crossorigin="anonymous"></script>
+  <title>Text Editor</title>
+</head>
+```
+
+### Live Server Install
+
+[Install Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
+
+### Cloning Repo
+
+```
+git clone git@github.com/RyanLarge13/Text-Editor-JS.git
+```
